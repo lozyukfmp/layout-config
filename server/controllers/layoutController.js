@@ -24,7 +24,7 @@ module.exports.add = async function (req, res) {
         const layout = await new Layout({
             name: req.body.name,
             structure: req.body.structure,
-            description: req.body.description,
+            tenant: req.body.tenant,
             innerHtml: req.body.innerHtml
         }).save();
         res.status(201).json(layout);

@@ -23,7 +23,7 @@ export default function (layout: Layout) {
       container.appendChild(domRow);
     }
   });
-  return container.innerHTML;
+  return container.innerHTML != '' ? container.innerHTML : "<span stub></span>";
 }
 
 function getFragmentHtml(fragment: FragmentInstance) {
