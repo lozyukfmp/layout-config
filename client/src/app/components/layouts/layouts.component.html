@@ -36,7 +36,7 @@
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
             <mat-panel-title> {{layout.name}} </mat-panel-title>
-            <mat-panel-description> {{layout.description || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>
+            <mat-panel-description> {{layout.tenant || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>
           </mat-expansion-panel-header>
 
           <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: layout}"></ng-container>
@@ -64,37 +64,29 @@
       <input matInput placeholder="Name" [(ngModel)]="layout.name" required>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Description" [(ngModel)]="layout.description">
+      <input matInput placeholder="Tenant" [(ngModel)]="layout.tenant">
     </mat-form-field>
   </div>
 
   <div class="layout-configuration-map">
-    <div class="row head">
-      <div class="col col-100">
-        <div class="column-controls" *ngIf="_fragments.length > 0">
-          <button mat-mini-fab color=""
-                  matTooltip="Add fragment to head"
-                  (click)="_openDialog(layout.structure.headFragments)">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <ng-container *ngFor="let headFragment of layout.structure.headFragments; let index = index">
-          <ng-container *ngTemplateOutlet="fragmentTemplate; context: {$implicit: headFragment, fragments: layout.structure.headFragments, index: index }"></ng-container>
-        </ng-container>
-      </div>
-    </div>
     <div class="row" *ngFor="let row of layout.structure.rows">
       <ng-container *ngFor="let column of row.columns">
         <div class="{{column.cssClass}}">
           <div class="column-controls" *ngIf="_fragments.length > 0">
             <button mat-mini-fab color="primary"
-                    (click)="_openDialog(column.fragments)"
+                    (click)="_openAddFragmentDialog(column.fragments)"
                     matTooltip="Add fragment">
               <mat-icon>add</mat-icon>
             </button>
           </div>
           <ng-container *ngFor="let fragment of column.fragments; let index = index">
-            <ng-container *ngTemplateOutlet="fragmentTemplate; context: {$implicit: fragment, fragments: column.fragments, index: index}"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="fragmentTemplate; context: {
+                $implicit: fragment, fragments:
+                column.fragments, index: index,
+                tenant: layout.tenant
+              }"
+            ></ng-container>
           </ng-container>
         </div>
       </ng-container>
@@ -110,10 +102,18 @@
   </div>
 </ng-template>
 
-<ng-template #fragmentTemplate let-fragment let-fragments="fragments" let-index="index">
+<ng-template #fragmentTemplate let-fragment let-fragments="fragments" let-tenant="tenant" let-index="index">
   <div class="fragment">
-    <span class="fragment-info"> <mat-icon>receipt</mat-icon> {{fragment.name}} </span>
+    <span class="fragment-info">
+      <mat-icon>receipt</mat-icon> {{fragment.fragmentType.name}}
+      <i style="opacity: 0.5; font-size: 11px">{{fragment.instanceId}}</i>
+    </span>
     <span class="fragment-controls">
+      <ng-container *ngIf="!fragment.fragmentType.hasPreferences">
+        <button mat-icon-button (click)="_openSetPreferencesDialog(fragment, tenant)">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </ng-container>
       <ng-container *ngIf="fragments.length > 1">
         <button mat-icon-button (click)="_moveUpFragment(fragments ,index)">
           <mat-icon>arrow_upward</mat-icon>
@@ -122,7 +122,7 @@
           <mat-icon>arrow_downward</mat-icon>
         </button>
       </ng-container>
-      <button mat-icon-button (click)="fragments.splice(index, 1)">
+      <button mat-icon-button (click)="_deleteFragment(fragments, index)">
         <mat-icon>delete_forever</mat-icon>
       </button>
     </span>

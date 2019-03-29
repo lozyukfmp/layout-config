@@ -12,8 +12,8 @@ import {MatSnackBar} from "@angular/material";
 })
 export class LoginPageComponent implements OnInit, OnDestroy {
 
-  form: FormGroup
-  aSub: Subscription
+  form: FormGroup;
+  aSub: Subscription;
 
   constructor(private auth: AuthService,
               private router: Router,

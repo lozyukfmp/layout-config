@@ -3,7 +3,7 @@ const Layout = require('../models/Layout');
 module.exports.getAll = async function (req, res) {
     try {
         const result = await Layout.find({})
-            .populate('rows.columns.fragments.fragmentType');
+            .populate('structure.rows.columns.fragments.fragmentType');
         res.status(200).json(result);
     } catch (e) {
         onError(res, e)

@@ -20,7 +20,6 @@ import {MatCardModule} from '@angular/material/card';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {FragmentsComponent} from './components/fragments/fragments.component';
 import {LayoutsComponent} from './components/layouts/layouts.component';
-// import {TailorPagesComponent} from './components/tailor-pages/tailor-pages.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -31,6 +30,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
 import {PreferencesComponent} from "./components/preferences/preferences.component";
+import {PreferencesDialogComponent} from "./components/layouts/preferences-dialog/preferences-dialog.component";
 
 
 @NgModule({
@@ -40,11 +40,11 @@ import {PreferencesComponent} from "./components/preferences/preferences.compone
     SiteLayoutComponent,
     FragmentsComponent,
     LayoutsComponent,
-    // TailorPagesComponent,
     FragmentsDialogComponent,
+    PreferencesDialogComponent,
+    PreferencesComponent,
 // pipes
     ArrayFilterPipe,
-    PreferencesComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +70,7 @@ import {PreferencesComponent} from "./components/preferences/preferences.compone
     MatChipsModule,
     MatCardModule
   ],
-  entryComponents: [FragmentsDialogComponent],
+  entryComponents: [FragmentsDialogComponent, PreferencesDialogComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

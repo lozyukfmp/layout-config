@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row class="_page-limiter p-0">
       <mat-icon class="example-icon p-0">pages</mat-icon>
-      <span>Layout Service Configuration</span>
+      <span>Layouts & Preferences Storage</span>
       <span class="example-spacer"></span>
       <a mat-button *ngFor="let link of _links" routerLinkActive="active" [routerLink]="[link.url]">{{link.name}}</a>
       <button mat-icon-button (click)="logout($event)" matTooltip="Logout">
