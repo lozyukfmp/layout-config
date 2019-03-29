@@ -85,12 +85,16 @@
     <mat-form-field *ngIf="!fragment.isCustom">
       <input matInput placeholder="Render Tag (<app-root>loading</app-root>)" [(ngModel)]="fragment.renderTag" required>
     </mat-form-field>
+    <mat-slide-toggle class="switcher-field" [color]="'primary'" [(ngModel)]="fragment.hasPreferences">
+      Preferences
+    </mat-slide-toggle>
     <!--<mat-form-field *ngIf="!fragment.isCustom">-->
       <!--<input matInput placeholder="Common Dependencies" [(ngModel)]="fragment.commonDependencies">-->
     <!--</mat-form-field>-->
     <mat-form-field *ngIf="fragment.isCustom" class="custom-content-field">
       <textarea matInput placeholder="Content" [(ngModel)]="fragment.customContent"></textarea>
     </mat-form-field>
+    <app-preferences class="preferences-field" [preferencesDefinitions]="fragment.preferencesDefinition" *ngIf="fragment.hasPreferences"></app-preferences>
   </div>
 </ng-template>
 

@@ -1,0 +1,31 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-subtitle>Preferences</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="preferenceTypeLine; context: {$implicit: newPref, exist: false}"></ng-container>
+    <div *ngFor="let definition of preferencesDefinitions">
+      <ng-container *ngTemplateOutlet="preferenceTypeLine; context: {$implicit: definition, exist: true}"></ng-container>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #preferenceTypeLine let-definition let-exist="exist">
+  <div class="preferences-line">
+    <mat-form-field>
+      <input matInput placeholder="Key" [(ngModel)]="definition.key" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select [(value)]="definition.type">
+        <mat-option *ngFor="let type of types" value="{{type}}">{{type}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button *ngIf="!exist" mat-icon-button (click)="addPref()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button *ngIf="exist" mat-icon-button (click)="removePref(definition)">
+      <mat-icon>remove</mat-icon>
+    </button>
+  </div>
+</ng-template>
