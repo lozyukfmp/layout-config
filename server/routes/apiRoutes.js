@@ -30,6 +30,6 @@ router.patch(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {se
 router.delete(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.remove);
 
 //output api for tailor
-router.get('/p/layouts', publicApiController.getDataForTenant());
+router.get('/p/layouts', publicApiController.getDataForTenant);
 
 module.exports = router;
