@@ -16,6 +16,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule, MatCheckboxModule} from '@angular/material'
+import {MatCardModule} from '@angular/material/card';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {FragmentsComponent} from './components/fragments/fragments.component';
 import {LayoutsComponent} from './components/layouts/layouts.component';
@@ -28,6 +29,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
+import {PreferencesComponent} from "./components/preferences/preferences.component";
 import {PreferencesDialogComponent} from "./components/layouts/preferences-dialog/preferences-dialog.component";
 
 
@@ -40,8 +42,9 @@ import {PreferencesDialogComponent} from "./components/layouts/preferences-dialo
     LayoutsComponent,
     FragmentsDialogComponent,
     PreferencesDialogComponent,
+    PreferencesComponent,
 // pipes
-    ArrayFilterPipe
+    ArrayFilterPipe,
   ],
   imports: [
     BrowserModule,
@@ -64,7 +67,8 @@ import {PreferencesDialogComponent} from "./components/layouts/preferences-dialo
     MatDialogModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
+    MatCardModule
   ],
   entryComponents: [FragmentsDialogComponent, PreferencesDialogComponent],
   providers: [
