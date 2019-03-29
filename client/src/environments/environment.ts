@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   baseApiUrl: "/api",
-  htmlTitle: "Title",
   instanceHost: "127.0.0.1",
   layoutServicePort: "5000"
 };

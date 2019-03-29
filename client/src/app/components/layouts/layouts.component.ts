@@ -43,6 +43,10 @@ export class LayoutsComponent implements OnInit {
     this.fragmentsService.fetch().subscribe(res => {
       this._fragments = res;
     });
+    this.updatePreferencesData();
+  }
+
+  updatePreferencesData(){
     this.preferencesService.fetch().subscribe(res => {
       this._preferences = res;
     });
@@ -132,9 +136,21 @@ export class LayoutsComponent implements OnInit {
       width: 'auto',
       data: {fragment: fragment, preferences: this._preferences, tenant: tenant}
     });
-    dialogRef.afterClosed().subscribe(newPreferences => {
-      if (newPreferences != undefined) {
-        console.log(newPreferences);
+    dialogRef.afterClosed().subscribe(preferences => {
+      if (preferences != undefined) {
+        if( preferences._id != null){
+         console.log('update pref ', preferences)
+          this.preferencesService.update(preferences).subscribe(_ => {
+            this.snackBar.open("Preferences has been updated", "", {duration: 2000, panelClass: "_success"});
+            this.updatePreferencesData();
+          });
+        } else {
+          this.preferencesService.create(preferences).subscribe(_ => {
+            this.snackBar.open("Preferences has been created", "", {duration: 2000, panelClass: "_success"});
+            this.updatePreferencesData();
+          });;
+          console.log('save new pref ', preferences)
+        }
         //todo  save newPreferences
       }
     })

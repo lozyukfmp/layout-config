@@ -15,7 +15,7 @@ const preferencesValuesSchema = new Schema({
         ref: 'fragments',
         type: Schema.Types.ObjectId
     },
-    values: [Schema.Types.Mixed]
+    values: Schema.Types.Mixed
 });
 
 module.exports = mongoose.model('preferences', preferencesValuesSchema);

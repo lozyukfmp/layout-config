@@ -6,9 +6,10 @@ const path = require("path");
 
 module.exports.getDataForTenant = async function (req, res) {
     try {
-        const layouts = await LayoutController.getAll({});
-        const preferences = await PreferencesController.getAll({});
-        const result = {layouts, preferences};
+        const tenant =  req.params.tenant;
+        const layouts = await Layout.find({});
+        // const preferences = await PreferencesController.getAll({});
+        const result = {layouts};
         res.status(200).json(result);
     } catch (e) {
         onError(res, e)

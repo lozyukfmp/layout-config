@@ -5,5 +5,12 @@ export class Preferences {
   fragmentInstanceId: string;
   tenant: string;
   fragment: Fragment;
-  values: any[];
+  values: any;
+
+  constructor(fragmentInstanceId: string, tenant: string, fragment: Fragment, values: any) {
+    this.fragmentInstanceId = fragmentInstanceId;
+    this.tenant = tenant;
+    this.fragment = fragment;
+    this.values = values;
+  }
 }

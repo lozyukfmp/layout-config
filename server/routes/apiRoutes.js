@@ -24,12 +24,12 @@ router.delete(layoutApiUrl + ':layoutId', passport.authenticate('jwt', {session:
 // pages
 const preferencesApiUrl = '/preferences/';
 router.get(preferencesApiUrl, passport.authenticate('jwt', {session: false}), preferencesController.getAll);
-router.get(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.get);
+router.get(preferencesApiUrl + ':preferredId', passport.authenticate('jwt', {session: false}), preferencesController.get);
 router.post(preferencesApiUrl, passport.authenticate('jwt', {session: false}), preferencesController.add);
-router.patch(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.update);
-router.delete(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.remove);
+router.patch(preferencesApiUrl + ':preferredId', passport.authenticate('jwt', {session: false}), preferencesController.update);
+router.delete(preferencesApiUrl + ':preferredId', passport.authenticate('jwt', {session: false}), preferencesController.remove);
 
 //output api for tailor
-router.get('/p/layouts', publicApiController.getDataForTenant);
+router.get('/p/layouts/:tenant', publicApiController.getDataForTenant);
 
 module.exports = router;

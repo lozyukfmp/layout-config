@@ -83,7 +83,7 @@
       Custom Fragment
     </mat-slide-toggle>
     <mat-form-field *ngIf="!fragment.isCustom">
-      <input matInput placeholder="Render Tag (<app-root>loading</app-root>)" [(ngModel)]="fragment.renderTag" required>
+      <input matInput placeholder="Render Tag (app-root)" [(ngModel)]="fragment.renderTag" required>
     </mat-form-field>
     <mat-slide-toggle class="switcher-field" [color]="'primary'" [(ngModel)]="fragment.hasPreferences">
       Preferences

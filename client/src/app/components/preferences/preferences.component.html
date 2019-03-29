@@ -13,6 +13,9 @@
 <ng-template #preferenceTypeLine let-definition let-exist="exist">
   <div class="preferences-line">
     <mat-form-field>
+      <input matInput placeholder="Display Name" [(ngModel)]="definition.displayName" required>
+    </mat-form-field>
+    <mat-form-field>
       <input matInput placeholder="Key" [(ngModel)]="definition.key" required>
     </mat-form-field>
     <mat-form-field>
@@ -20,6 +23,9 @@
       <mat-select [(value)]="definition.type">
         <mat-option *ngFor="let type of types" value="{{type}}">{{type}}</mat-option>
       </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Default Value" [(ngModel)]="definition.defaultValue" required>
     </mat-form-field>
     <button *ngIf="!exist" mat-icon-button (click)="addPref()">
       <mat-icon>add</mat-icon>

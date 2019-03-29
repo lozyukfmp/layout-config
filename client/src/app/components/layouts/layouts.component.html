@@ -109,7 +109,7 @@
       <i style="opacity: 0.5; font-size: 11px">{{fragment.instanceId}}</i>
     </span>
     <span class="fragment-controls">
-      <ng-container *ngIf="!fragment.fragmentType.hasPreferences">
+      <ng-container *ngIf="fragment.fragmentType.hasPreferences">
         <button mat-icon-button (click)="_openSetPreferencesDialog(fragment, tenant)">
           <mat-icon>settings</mat-icon>
         </button>
