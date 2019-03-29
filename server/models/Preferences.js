@@ -7,12 +7,11 @@ const preferencesValuesSchema = new Schema({
         required: true,
         unique: true
     },
-    tenantId: {
+    tenant: {
         type: String,
-        required: true,
-        unique: true
+        default: 'DEFAULT'
     },
     values: [Schema.Types.Mixed]
 });
 
-module.exports = mongoose.model('fragments', fragmentSchema);
+module.exports = mongoose.model('preferences', preferencesValuesSchema);

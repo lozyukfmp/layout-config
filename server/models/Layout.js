@@ -4,12 +4,11 @@ const Schema = mongoose.Schema;
 const layoutSchema = new Schema({
     name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
-    description: {
+    tenant: {
         type: String,
-        default: ''
+        default: 'DEFAULT'
     },
     innerHtml:{
         type: String,
@@ -22,7 +21,7 @@ const layoutSchema = new Schema({
                 cssClass: String,
                 fragments: [
                     {
-                        fragmentId: Number,
+                        fragmentId: String,
                         fragmentType:{
                             ref: 'fragments',
                             type: Schema.Types.ObjectId

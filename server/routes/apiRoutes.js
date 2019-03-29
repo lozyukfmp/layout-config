@@ -2,6 +2,7 @@ const express = require('express');
 const fragmentController = require('../controllers/fragmentController');
 const layoutController = require('../controllers/layoutController');
 const preferencesController = require('../controllers/preferencesController');
+const publicApiController = require('../controllers/publicApiController');
 const router = express.Router();
 const passport = require('passport');
 
@@ -23,13 +24,12 @@ router.delete(layoutApiUrl + ':layoutId', passport.authenticate('jwt', {session:
 // pages
 const preferencesApiUrl = '/preferences/';
 router.get(preferencesApiUrl, passport.authenticate('jwt', {session: false}), preferencesController.getAll);
-router.get(preferencesApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), preferencesController.get);
+router.get(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.get);
 router.post(preferencesApiUrl, passport.authenticate('jwt', {session: false}), preferencesController.add);
-router.patch(preferencesApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), preferencesController.update);
-router.delete(preferencesApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), preferencesController.remove);
+router.patch(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.update);
+router.delete(preferencesApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), preferencesController.remove);
 
 //output api for tailor
-router.get('/p/layouts', pageController.getByPageUrl);
-router.get('/p/preferences', pageController.getByPageUrl);
+router.get('/p/layouts', publicApiController.getDataForTenant());
 
 module.exports = router;

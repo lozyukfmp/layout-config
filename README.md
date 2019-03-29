@@ -1,4 +1,4 @@
-# layout-service-configuration
+# LaPS
 
 run from root and ./client `npm i`  for install dependencies 
 
