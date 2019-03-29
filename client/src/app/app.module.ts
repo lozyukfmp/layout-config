@@ -19,7 +19,6 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material'
 import {MatExpansionModule} from '@angular/material/expansion';
 import {FragmentsComponent} from './components/fragments/fragments.component';
 import {LayoutsComponent} from './components/layouts/layouts.component';
-// import {TailorPagesComponent} from './components/tailor-pages/tailor-pages.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -29,6 +28,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
+import {PreferencesDialogComponent} from "./components/layouts/preferences-dialog/preferences-dialog.component";
 
 
 @NgModule({
@@ -38,8 +38,8 @@ import {MatChipsModule} from '@angular/material/chips';
     SiteLayoutComponent,
     FragmentsComponent,
     LayoutsComponent,
-    // TailorPagesComponent,
     FragmentsDialogComponent,
+    PreferencesDialogComponent,
 // pipes
     ArrayFilterPipe
   ],
@@ -66,7 +66,7 @@ import {MatChipsModule} from '@angular/material/chips';
     MatTooltipModule,
     MatChipsModule
   ],
-  entryComponents: [FragmentsDialogComponent],
+  entryComponents: [FragmentsDialogComponent, PreferencesDialogComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

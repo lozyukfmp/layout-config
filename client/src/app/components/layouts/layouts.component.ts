@@ -7,8 +7,12 @@ import {MatExpansionPanel} from '@angular/material/expansion';
 import {Fragment} from "../../models/Fragment";
 import {FragmentsService} from "../../services/fragments.service";
 import {FragmentsDialogComponent} from "./fragments-dialog/fragments-dialog.component";
+import {PreferencesDialogComponent} from "./preferences-dialog/preferences-dialog.component";
 import {MatDialog} from '@angular/material';
 import htmlBuilder from "./html-builder";
+import {FragmentInstance} from "../../models/FragmentInstance";
+import {PreferencesService} from "../../services/preferences.service";
+import {Preferences} from "../../models/Preferences";
 
 @Component({
   selector: 'app-layouts',
@@ -23,11 +27,13 @@ export class LayoutsComponent implements OnInit {
   public _layouts: Observable<Layout[]>;
   public _fragments: Fragment[] = [];
   public _newLayoutForm: Layout = new Layout();
+  public _preferences: Preferences[];
 
   _filterValue: string;
 
   constructor(private layoutsService: LayoutsService,
               private fragmentsService: FragmentsService,
+              private preferencesService: PreferencesService,
               public snackBar: MatSnackBar,
               public dialog: MatDialog) {
   }
@@ -36,6 +42,9 @@ export class LayoutsComponent implements OnInit {
     this.updateLayouts();
     this.fragmentsService.fetch().subscribe(res => {
       this._fragments = res;
+    });
+    this.preferencesService.fetch().subscribe(res => {
+      this._preferences = res;
     });
   }
 
@@ -62,6 +71,7 @@ export class LayoutsComponent implements OnInit {
   _deleteLayout(layout: Layout) {
     this._crudLoading = true;
     this.layoutsService.delete(layout._id).subscribe(_ => {
+      // todo delete preferences for fragment instances
       this.snackBar.open("Layout has been deleted", "", {duration: 2000, panelClass: "_success"});
       this._rollBackNewFrom();
       this.updateLayouts();
@@ -82,6 +92,11 @@ export class LayoutsComponent implements OnInit {
     this._newLayoutForm = new Layout();
   }
 
+  _deleteFragment(fragments, index){
+    // todo delete preferences for fragment instance
+    fragments.splice(index, 1)
+  }
+
   _moveDownFragment(fragments: Fragment[], index: number) {
     if (index < fragments.length - 1) {
       this.moveFragment(fragments, index, index + 1);
@@ -100,14 +115,27 @@ export class LayoutsComponent implements OnInit {
     fragments.splice(to, 0, elem);
   }
 
-  _openDialog(fragments: Fragment[]): void {
+  _openAddFragmentDialog(fragments: FragmentInstance[]): void {
     const dialogRef = this.dialog.open(FragmentsDialogComponent, {
-      width: '250px',
+      width: 'auto',
       data: this._fragments
     });
     dialogRef.afterClosed().subscribe(selectedFragment => {
       if (selectedFragment != undefined) {
-        fragments.push(selectedFragment)
+        fragments.push(new FragmentInstance(selectedFragment))
+      }
+    })
+  }
+
+  _openSetPreferencesDialog(fragment: FragmentInstance, tenant:string ){
+    const dialogRef = this.dialog.open(PreferencesDialogComponent, {
+      width: 'auto',
+      data: {fragment: fragment, preferences: this._preferences, tenant: tenant}
+    });
+    dialogRef.afterClosed().subscribe(newPreferences => {
+      if (newPreferences != undefined) {
+        console.log(newPreferences);
+        //todo  save newPreferences
       }
     })
   }
