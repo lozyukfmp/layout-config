@@ -8,7 +8,7 @@ module.exports.getDataForTenant = async function (req, res) {
     try {
         const tenant =  req.params.tenant;
         const layouts = await Layout.find({});
-        const preferences = await PreferencesController.getAll({});
+        const preferences = await Preferences.find({});
         const result = {layouts,preferences};
         res.status(200).json(result);
     } catch (e) {
