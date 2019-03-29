@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const preferencesValuesSchema = new Schema({
-    fragmentId: {
+    fragmentInstanceId: {
         type: String,
         required: true,
         unique: true
@@ -10,6 +10,10 @@ const preferencesValuesSchema = new Schema({
     tenant: {
         type: String,
         default: 'DEFAULT'
+    },
+    fragment: {
+        ref: 'fragments',
+        type: Schema.Types.ObjectId
     },
     values: [Schema.Types.Mixed]
 });

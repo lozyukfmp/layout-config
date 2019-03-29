@@ -2,7 +2,8 @@ const Preferences = require('../models/Preferences');
 
 module.exports.getAll = async function (req, res) {
     try {
-        const allPrefs = await Preferences.find({});
+        const allPrefs = await Preferences.find({})
+            .populate('fragment');
         res.status(200).json(allPrefs);
     } catch (e) {
         onError(res, e)
@@ -11,7 +12,8 @@ module.exports.getAll = async function (req, res) {
 
 module.exports.get = async function (req, res) {
     try {
-        const prefs = await Preferences.findById(req.params.fragmentId);
+        const prefs = await Preferences.findById(req.params.fragmentId)
+            .populate('fragment');
         res.status(200).json(prefs);
     } catch (e) {
         onError(res, e)

@@ -10,7 +10,7 @@ const config = require('../config');
 
 
 mongoose.connect(config.mongoUri)
-    .then(_ => console.log('Template Storage: Mongo DB Connected'))
+    .then(_ => console.log('LaPS : Mongo DB Connected'))
     .catch(err => console.log(err));
 
 app.use(passport.initialize());

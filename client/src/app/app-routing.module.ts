@@ -20,8 +20,8 @@ const routes: Routes = [
   {
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
       {path: 'fragments', component: FragmentsComponent},
-      {path: 'layouts', component: LayoutsComponent},
-      {path: 'pages', component: TailorPagesComponent}
+      {path: 'layouts', component: LayoutsComponent}
+      // {path: 'pages', component: TailorPagesComponent}
     ]
   }
 ];
