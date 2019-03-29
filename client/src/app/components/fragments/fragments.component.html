@@ -1,0 +1,110 @@
+<mat-toolbar>
+  <div class="_page-limiter fragment-component-head">
+    <mat-icon>receipt</mat-icon>
+    Fragments
+    <app-search-box
+      class="fragment-component-head__search-box"
+      placeholder='Search by name..'
+      (searchValueChanged)="_filterValue = $event"
+    ></app-search-box>
+  </div>
+</mat-toolbar>
+<div class="_page-limiter">
+  <mat-accordion class="fragment-component-body headers-align">
+    <!--new fragment-->
+    <mat-expansion-panel hideToggle [expanded]="_expandedNewForm" (opened)="_expandedNewForm = true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>New Fragment</mat-panel-title>
+        <mat-panel-description class="_new">
+          <mat-icon>add_circle</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <ng-container *ngTemplateOutlet="fragmentForm; context: {$implicit: _newFragmentForm}"></ng-container>
+
+      <mat-action-row *ngIf="!_crudLoading; else loader">
+        <button mat-button (click)="_rollBackNewFrom()">
+          <mat-icon>settings_backup_restore</mat-icon>
+          Clear
+        </button>
+        <button mat-button (click)="_createFragment()">
+          <mat-icon>save</mat-icon>
+          Create
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <hr>
+    <!--created fragments-->
+    <ng-container *ngIf="_fragments | async as fragments; else loader">
+      <ng-container *ngFor="let fragment of fragments | filterArray: {name: _filterValue}">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{fragment.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+              <ng-container *ngIf="fragment.isCustom">&lt;custom/&gt;</ng-container>
+              <ng-container *ngIf="!fragment.isCustom">{{fragment.url || "-"}}</ng-container>
+              <mat-icon>receipt</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ng-container *ngTemplateOutlet="fragmentForm; context: {$implicit: fragment}"></ng-container>
+
+          <mat-action-row *ngIf="!_crudLoading; else loader">
+            <button mat-button (click)="_revertData()">
+              <mat-icon>settings_backup_restore</mat-icon>
+              Cancel
+            </button>
+            <button mat-button (click)="_editFragment(fragment)">
+              <mat-icon>save</mat-icon>
+              Save Changes
+            </button>
+            <button mat-button (click)="_deleteFragment(fragment)">
+              <mat-icon>delete_forever</mat-icon>
+              Delete
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container>
+    </ng-container>
+  </mat-accordion>
+</div>
+
+<ng-template #fragmentForm let-fragment>
+  <div class="panel-form-body">
+    <mat-form-field>
+      <input matInput placeholder="Name" [(ngModel)]="fragment.name" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Description" [(ngModel)]="fragment.description">
+    </mat-form-field>
+    <mat-slide-toggle class="switcher-field" [color]="'primary'" [(ngModel)]="fragment.isCustom">
+      Custom Fragment
+    </mat-slide-toggle>
+    <mat-form-field *ngIf="!fragment.isCustom">
+      <input matInput placeholder="URL (with http://)" [(ngModel)]="fragment.url" required pattern={{URL_PATTERN}} #model="ngModel">
+      <mat-error *ngIf="model.errors?.pattern">URL must begin at http//: or https//: </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="!fragment.isCustom">
+      <input matInput placeholder="Render Tag (<app-root>loading</app-root>)" [(ngModel)]="fragment.renderTag" required>
+    </mat-form-field>
+    <!--<mat-form-field *ngIf="!fragment.isCustom">-->
+      <!--<input matInput placeholder="Common Dependencies" [(ngModel)]="fragment.commonDependencies">-->
+    <!--</mat-form-field>-->
+    <mat-form-field *ngIf="!fragment.isCustom">
+      <mat-select [(value)]="fragment.attribute" placeholder="Attribute">
+        <mat-option *ngFor="let attribute of _attributesValues" [value]="attribute">
+          {{attribute}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="fragment.isCustom" class="custom-content-field">
+      <textarea matInput placeholder="Content" [(ngModel)]="fragment.customContent"></textarea>
+    </mat-form-field>
+  </div>
+</ng-template>
+
+<ng-template #loader>
+  <mat-progress-bar class="app-loader" mode="indeterminate"></mat-progress-bar>
+</ng-template>

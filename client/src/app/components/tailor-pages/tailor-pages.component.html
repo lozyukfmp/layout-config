@@ -1,0 +1,99 @@
+<mat-toolbar>
+  <div class="_page-limiter page-component-head">
+    <mat-icon>list_alt</mat-icon> Pages
+    <app-search-box
+      class="page-component-head__search-box"
+      placeholder='Search by url..'
+      (searchValueChanged)="_filterValue = $event"
+    ></app-search-box>
+  </div>
+</mat-toolbar>
+<div class="_page-limiter">
+  <mat-accordion class="page-component-body headers-align">
+    <!--new fragment-->
+    <mat-expansion-panel hideToggle [expanded]="_expandedNewForm" (opened)="_expandedNewForm = true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          New Page
+        </mat-panel-title>
+        <mat-panel-description class="_new">
+          <mat-icon>add_circle</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <ng-container *ngTemplateOutlet="pageForm; context: {$implicit: _newPageForm, formControl: _layoutsControl, layouts:_filteredLayouts}"></ng-container>
+
+      <mat-action-row *ngIf="!_crudLoading; else loader">
+        <button mat-button (click)="_rollBackNewFrom()">
+          <mat-icon>settings_backup_restore</mat-icon>Clear
+        </button>
+        <button mat-button (click)="_createPage()">
+          <mat-icon>save</mat-icon>Create
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <hr>
+
+    <!--created pages-->
+    <ng-container *ngIf="_tailorPages | async as tailorPages; else loader">
+      <ng-container *ngFor="let tailorPage of tailorPages | filterArray: {requestUrl: _filterValue}">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Request Urls: {{tailorPage.requestUrls}}
+            </mat-panel-title>
+            <mat-panel-description>
+              Layout: {{tailorPage.layout.name}}<mat-icon>list_alt</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ng-container *ngTemplateOutlet="pageForm; context: {$implicit: tailorPage, formControl:tailorPage.formControl, layouts: tailorPage.filteredLayouts}"></ng-container>
+
+          <mat-action-row *ngIf="!_crudLoading; else loader">
+            <button mat-button (click)="_revertData()">
+              <mat-icon>settings_backup_restore</mat-icon> Cancel
+            </button>
+            <button mat-button (click)="_editPage(tailorPage)">
+              <mat-icon>save</mat-icon> Save Changes
+            </button>
+            <button mat-button (click)="_deletePage(tailorPage)">
+              <mat-icon>delete_forever</mat-icon> Delete
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container>
+    </ng-container>
+  </mat-accordion>
+</div>
+
+<ng-template #pageForm let-tailorPage let-formControl="formControl" let-layouts="layouts">
+  <div class="panel-form-body">
+    <mat-form-field>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let url of tailorPage.requestUrls" [selectable]="true"
+                  [removable]="true" (removed)="_removeExtraPath(url, tailorPage)">
+          {{url}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Request URL (customer/:id/details)"
+               [matChipInputFor]="chipList" required
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="_addExtraPath(tailorPage, $event)">
+      </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Layout" matInput [matAutocomplete]="auto" [formControl]="formControl" [(ngModel)]="tailorPage.layout" required>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="_displayLayoutName">
+        <mat-option *ngFor="let layout of layouts | async" [value]="layout">
+          {{layout.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</ng-template>
+
+<ng-template #loader>
+  <mat-progress-bar class="app-loader" mode="indeterminate"></mat-progress-bar>
+</ng-template>

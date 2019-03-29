@@ -1,0 +1,21 @@
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #212121;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.login-form-container > * {
+  width: 302px;
+  margin: 5px auto;
+}
+.login-form-title{
+  color: white;
+}
+.login-form > * {
+  width: 100%;
+}
+.mat-input-element{
+  color: white;
+}

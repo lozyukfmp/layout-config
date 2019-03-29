@@ -1,0 +1,15 @@
+<h1 mat-dialog-title class="_v-allign"><mat-icon>receipt</mat-icon> Add Fragment</h1>
+<div mat-dialog-content>
+  <mat-form-field class="column-controls__fragments">
+    <input type="text" placeholder="Fragment" matInput [matAutocomplete]="auto" [formControl]="_fragmentsControl">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="_displayFragmentName">
+      <mat-option *ngFor="let option of _filteredOptions | async" [value]="option">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button class="_v-allign" [mat-dialog-close]="_fragmentsControl.value" cdkFocusInitial> <mat-icon>library_add</mat-icon>Add</button>
+  <button mat-button class="_v-allign" (click)="_onCancelClick()"><mat-icon>close</mat-icon>Cancel</button>
+</div>

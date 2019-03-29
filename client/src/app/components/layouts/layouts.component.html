@@ -1,0 +1,134 @@
+<mat-toolbar>
+  <div class="_page-limiter layout-component-head">
+    <mat-icon>table_chart</mat-icon> Layouts
+    <app-search-box
+      class="layout-component-head__search-box"
+      placeholder='Search by name..'
+      (searchValueChanged)="_filterValue = $event"
+    ></app-search-box>
+  </div>
+</mat-toolbar>
+<div class="_page-limiter">
+  <mat-accordion class="layout-component-body headers-align">
+    <!--new layouts-->
+    <mat-expansion-panel hideToggle [expanded]="_expandedNewForm" (opened)="_expandedNewForm = true">
+      <mat-expansion-panel-header>
+        <mat-panel-title> New Layout </mat-panel-title>
+        <mat-panel-description class="_new"> <mat-icon>add_circle</mat-icon> </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: _newLayoutForm}"></ng-container>
+
+      <mat-action-row *ngIf="!_crudLoading; else loader">
+        <button mat-button (click)="_rollBackNewFrom()">
+          <mat-icon>settings_backup_restore</mat-icon> Clear
+        </button>
+        <button mat-button (click)="_createLayout()">
+          <mat-icon>save</mat-icon> Create
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <hr>
+    <!--created Layouts-->
+    <ng-container *ngIf="_layouts | async as layouts; else loader">
+      <ng-container *ngFor="let layout of layouts | filterArray: {name: _filterValue}">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> {{layout.name}} </mat-panel-title>
+            <mat-panel-description> {{layout.description || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: layout}"></ng-container>
+
+          <mat-action-row *ngIf="!_crudLoading; else loader">
+            <button mat-button (click)="_revertData()">
+              <mat-icon>settings_backup_restore</mat-icon> Cancel
+            </button>
+            <button mat-button (click)="_editLayout(layout)">
+              <mat-icon>save</mat-icon> Save Changes
+            </button>
+            <button mat-button (click)="_deleteLayout(layout)">
+              <mat-icon>delete_forever</mat-icon> Delete
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container>
+    </ng-container>
+  </mat-accordion>
+</div>
+
+<ng-template #layoutForm let-layout>
+  <div class="panel-form-body">
+    <mat-form-field>
+      <input matInput placeholder="Name" [(ngModel)]="layout.name" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Description" [(ngModel)]="layout.description">
+    </mat-form-field>
+  </div>
+
+  <div class="layout-configuration-map">
+    <div class="row head">
+      <div class="col col-100">
+        <div class="column-controls" *ngIf="_fragments.length > 0">
+          <button mat-mini-fab color=""
+                  matTooltip="Add fragment to head"
+                  (click)="_openDialog(layout.structure.headFragments)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <ng-container *ngFor="let headFragment of layout.structure.headFragments; let index = index">
+          <ng-container *ngTemplateOutlet="fragmentTemplate; context: {$implicit: headFragment, fragments: layout.structure.headFragments, index: index }"></ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row" *ngFor="let row of layout.structure.rows">
+      <ng-container *ngFor="let column of row.columns">
+        <div class="{{column.cssClass}}">
+          <div class="column-controls" *ngIf="_fragments.length > 0">
+            <button mat-mini-fab color="primary"
+                    (click)="_openDialog(column.fragments)"
+                    matTooltip="Add fragment">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <ng-container *ngFor="let fragment of column.fragments; let index = index">
+            <ng-container *ngTemplateOutlet="fragmentTemplate; context: {$implicit: fragment, fragments: column.fragments, index: index}"></ng-container>
+          </ng-container>
+        </div>
+      </ng-container>
+      <div class="row-controls">
+        <div class="row-controls__value">{{row.maxWidth || "-"}}</div>
+        <div class="row-controls__popover">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Max Width" [(ngModel)]="row.maxWidth">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #fragmentTemplate let-fragment let-fragments="fragments" let-index="index">
+  <div class="fragment">
+    <span class="fragment-info"> <mat-icon>receipt</mat-icon> {{fragment.name}} </span>
+    <span class="fragment-controls">
+      <ng-container *ngIf="fragments.length > 1">
+        <button mat-icon-button (click)="_moveUpFragment(fragments ,index)">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="_moveDownFragment(fragments, index)">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+      </ng-container>
+      <button mat-icon-button (click)="fragments.splice(index, 1)">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #loader>
+  <mat-progress-bar class="app-loader" mode="indeterminate"></mat-progress-bar>
+</ng-template>

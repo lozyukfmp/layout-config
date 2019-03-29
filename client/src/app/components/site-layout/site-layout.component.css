@@ -1,0 +1,19 @@
+.example-icon {
+  padding: 0 14px;
+  margin-right: 5px;
+}
+.content{
+  min-height: calc(100vh - 148px);
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+.app-footer{
+  margin-top: 20px;
+}
+.app-footer .app-footer_copyright{
+  text-align: center;
+  font-size: 11px;
+  color: gray;
+}
+

@@ -1,0 +1,35 @@
+<form class="login-form-container"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()">
+  <h3 class="login-form-title">Login</h3>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Email" formControlName="email"
+           id="email"
+           type="email">
+    <mat-error *ngIf="form.get('email').invalid && form.get('email').touched && form.get('email').errors['email']">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="form.get('email').invalid && form.get('email').touched && form.get('email').errors['required']">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Password" formControlName="password"
+           id="password"
+           type="password">
+    <mat-error *ngIf="form.get('password').invalid && form.get('password').touched && form.get('password').errors['minlength'] && form.get('password').errors['minlength']['requiredLength']">
+      Password must be greater than {{form.get('password').errors['minlength']['requiredLength']}} characters.
+    </mat-error>
+    <mat-error *ngIf="form.get('password').invalid && form.get('password').touched && form.get('password').errors['required']">
+      Password is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <br>
+  <button mat-button mat-raised-button color="primary" type="submit"
+          class="modal-action btn waves-effect"
+          [disabled]="form.invalid || form.disabled">
+    Login
+  </button>
+</form>

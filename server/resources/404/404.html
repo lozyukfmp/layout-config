@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Page Not Found</title>
+    <style>
+        .page-not-found {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            position: relative;
+            margin-top: calc(50vh - 310px);
+        }
+
+        .page-not-found__error-code {
+            font-size: 25vw;
+            font-weight: bold;
+            text-align: center;
+            color: #eaedf1;
+            text-shadow: 0 0 30px rgba(73, 95, 130, 0.07), 0 30px 30px rgba(73, 95, 130, 0.07), 0 30px 40px rgba(73, 95, 130, 0.07);
+            cursor: default;
+        }
+
+        .page-not-found-resolve {
+            position: absolute;
+            text-align: center;
+            top: 43%;
+            color: #4e79a0;
+        }
+
+        .page-not-found-resolve__header {
+            font-size: 60px;
+        }
+
+        .page-not-found-resolve__body {
+            font-size: 26px;
+        }
+
+        .page-not-found-resolve__footer__text {
+            font-size: 18px;
+            color: #8ea8c5;
+        }
+
+        body {
+            font-family: "Lato", sans-serif;
+            padding: 0;
+            font-weight: bold;
+            background-color: whitesmoke
+        }
+    </style>
+</head>
+<body>
+<div class="page-not-found">
+    <div class="page-not-found__error-code">
+        404
+    </div>
+    <div class="page-not-found-resolve">
+        <div class="page-not-found-resolve__header">Oops</div>
+        <div class="page-not-found-resolve__body">Something went wrong</div>
+        <div class="page-not-found-resolve__footer">
+            <div class="page-not-found-resolve__footer__text">
+                Error 404. Page Not Found
+            </div>
+        </div>
+    </div>
+</div>
