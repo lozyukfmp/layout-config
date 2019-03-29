@@ -87,7 +87,7 @@
       <mat-error *ngIf="model.errors?.pattern">URL must begin at http//: or https//: </mat-error>
     </mat-form-field>
     <mat-form-field *ngIf="!fragment.isCustom">
-      <input matInput placeholder="Render Tag (<app-root>loading</app-root>)" [(ngModel)]="fragment.renderTag" required>
+      <input matInput placeholder="Render Tag (app-root)" [(ngModel)]="fragment.renderTag" required>
     </mat-form-field>
     <!--<mat-form-field *ngIf="!fragment.isCustom">-->
       <!--<input matInput placeholder="Common Dependencies" [(ngModel)]="fragment.commonDependencies">-->

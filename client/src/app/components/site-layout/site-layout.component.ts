@@ -11,8 +11,7 @@ export class SiteLayoutComponent implements OnInit {
 
   public _links = [
     {url: '/fragments', name: 'Fragments'},
-    {url: '/layouts', name: 'Layouts'},
-    {url: '/pages', name: 'Pages'}
+    {url: '/layouts', name: 'Layouts'}
   ];
 
   constructor(private auth: AuthService,

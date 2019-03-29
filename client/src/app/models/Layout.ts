@@ -1,4 +1,4 @@
-import {Fragment} from "./Fragment";
+import {FragmentInstance} from "./FragmentInstance";
 
 export class Layout {
   _id?: string;
@@ -18,11 +18,6 @@ export class Layout {
 export class LayoutColumn {
   cssClass: string;
   fragments: FragmentInstance[];
-}
-
-export class FragmentInstance {
-  instanceId: string;
-  fragmentType: Fragment;
 }
 
 export class LayoutRow {
