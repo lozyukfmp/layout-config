@@ -8,9 +8,9 @@ import {MatSnackBar} from "@angular/material";
 @Injectable({
   providedIn: 'root'
 })
-export class PagesService extends DataBaseService<TailorPage> {
+export class PreferencesService extends DataBaseService<TailorPage> {
 
   constructor(http: HttpClient, snackBar: MatSnackBar) {
-    super(http, snackBar, `${environment.baseApiUrl}/page`);
+    super(http, snackBar, `${environment.baseApiUrl}/preferences`);
   }
 }

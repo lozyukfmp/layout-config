@@ -14,24 +14,27 @@ const layoutSchema = new Schema({
         type: String,
         required: true
     },
-    rows: [
-        {
-            maxWidth: String,
-            columns :[{
-                cssClass: String,
-                fragments: [
-                    {
-                        fragmentId: String,
-                        fragmentType:{
-                            ref: 'fragments',
-                            type: Schema.Types.ObjectId
+    structure:{
+        rows: [
+            {
+                maxWidth: String,
+                columns :[{
+                    cssClass: String,
+                    fragments: [
+                        {
+                            instanceId: String,
+                            fragmentType:{
+                                ref: 'fragments',
+                                type: Schema.Types.ObjectId
+                            }
                         }
-                    }
 
-                ]
-            }]
-        }
-    ]
+                    ]
+                }]
+            }
+        ]
+    }
+
 });
 
 module.exports = mongoose.model('layouts', layoutSchema);

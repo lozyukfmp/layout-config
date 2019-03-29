@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PagesService} from "../../services/pages.service";
+import {PreferencesService} from "../../services/pages.service";
 import {TailorPage, TailorPageViewModel} from "../../models/TailorPage";
 import {MatChipInputEvent, MatSnackBar} from "@angular/material";
 import {Layout} from "../../models/Layout";
@@ -28,7 +28,7 @@ export class TailorPagesComponent implements OnInit {
 
   _filterValue: string;
 
-  constructor(private pagesService: PagesService, private layoutsService: LayoutsService, public snackBar: MatSnackBar) {
+  constructor(private pagesService: PreferencesService, private layoutsService: LayoutsService, public snackBar: MatSnackBar) {
   }
 
   ngOnInit() {

@@ -3,21 +3,26 @@ import {Fragment} from "./Fragment";
 export class Layout {
   _id?: string;
   name: string;
+  tenant: string;
   structure: LayoutStructure;
-  description?: string;
   innerHtml: string;
 
   constructor() {
     this.name = "";
+    this.tenant = "DEFAULT";
     this.structure = new LayoutStructure();
-    this.description = "";
-    this.innerHtml = "1";
+    this.innerHtml = "";
   }
 }
 
 export class LayoutColumn {
   cssClass: string;
-  fragments: Fragment[];
+  fragments: FragmentInstance[];
+}
+
+export class FragmentInstance {
+  instanceId: string;
+  fragmentType: Fragment;
 }
 
 export class LayoutRow {
@@ -26,11 +31,8 @@ export class LayoutRow {
 }
 
 export class LayoutStructure {
-  headFragments: Fragment[];
   rows: LayoutRow[];
-
   constructor() {
-    this.headFragments = [];
     this.rows = [];
     const row1 = {
       maxWidth: '1200px',

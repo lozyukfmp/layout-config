@@ -19,7 +19,7 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material'
 import {MatExpansionModule} from '@angular/material/expansion';
 import {FragmentsComponent} from './components/fragments/fragments.component';
 import {LayoutsComponent} from './components/layouts/layouts.component';
-import {TailorPagesComponent} from './components/tailor-pages/tailor-pages.component';
+// import {TailorPagesComponent} from './components/tailor-pages/tailor-pages.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -38,7 +38,7 @@ import {MatChipsModule} from '@angular/material/chips';
     SiteLayoutComponent,
     FragmentsComponent,
     LayoutsComponent,
-    TailorPagesComponent,
+    // TailorPagesComponent,
     FragmentsDialogComponent,
 // pipes
     ArrayFilterPipe
