@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from "@angular/core";
-import {PreferencesType} from "../../models/PreferencesType";
+import {PreferencesType} from "../../../models/PreferencesType";
 
 @Component({
   selector: 'app-preferences',

@@ -29,7 +29,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
-import {PreferencesComponent} from "./components/preferences/preferences.component";
+import {PreferencesComponent} from "./components/fragments/preferences/preferences.component";
 import {PreferencesDialogComponent} from "./components/layouts/preferences-dialog/preferences-dialog.component";
 
 
