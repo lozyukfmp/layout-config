@@ -23,7 +23,7 @@ run `node index` for start dev b-e server
 
 run `export NODE_ENV=prod`
 
-run `export RBM_UI_MONGO_URI=mongodb://10.106.5.10:27017/lps`
+run `export LPS_MONGO_URI=mongodb://10.106.5.10:27017/lps`
 
 run `forever start index.js` for start detachable server
 
