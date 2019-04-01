@@ -38,9 +38,9 @@ user `admin@nc.com`  pass `1`
 
 
 -------------------------------------------
-### api for tailor
+### public api 
 
-(get) <host:5000/pages/wizard-page>
+(get) <host:5000/api/p/layouts/:tentantId>
 
 ### configuration client - dev server
 
