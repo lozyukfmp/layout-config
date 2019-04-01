@@ -33,7 +33,9 @@ const convertLayouts = (layouts, tenant) => {
 };
 
 const convertPreferences = preferences => {
-    return preferences;
+    const res = {};
+    preferences.map(item => item._doc).forEach(item => res[item.fragmentInstanceId] = item.values);
+    return res;
 };
 
 function filterPages(requestUrl, schemePages) {
