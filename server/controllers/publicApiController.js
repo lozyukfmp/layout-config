@@ -1,19 +1,39 @@
 const Preferences = require('../models/Preferences');
 const Layout = require('../models/Layout');
-const LayoutController = require('../controllers/layoutController');
-const PreferencesController = require('../controllers/PreferencesController');
-const path = require("path");
 
 module.exports.getDataForTenant = async function (req, res) {
     try {
-        const tenant =  req.params.tenant;
+        const tenant = req.params.tenant;
         const layouts = await Layout.find({});
         const preferences = await Preferences.find({});
-        const result = {layouts,preferences};
+        const result = {
+            layouts: convertLayouts(layouts, tenant),
+            preferences: convertPreferences(preferences)
+        };
         res.status(200).json(result);
     } catch (e) {
         onError(res, e)
     }
+};
+
+const convertLayouts = (layouts, tenant) => {
+    const res = {};
+    layouts
+        .map(item => item._doc)
+        .filter(item => {
+            const filteredLayouts = layouts.filter(layout => layout.name === item.name);
+            const tenantLayout = filteredLayouts.find(layout => layout.tenant === tenant);
+            if (tenantLayout) {
+                return item.tenant === tenant;
+            }
+            return item.tenant === 'DEFAULT';
+        })
+        .forEach(item => res[item.name] = item.innerHtml);
+    return res;
+};
+
+const convertPreferences = preferences => {
+    return preferences;
 };
 
 function filterPages(requestUrl, schemePages) {
