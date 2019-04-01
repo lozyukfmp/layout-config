@@ -58,7 +58,10 @@ module.exports.update = async function (req, res) {
 
 module.exports.remove = async function (req, res) {
     try {
+        const layout = await Layout.findById(req.params.layoutId);
         await Layout.remove({_id: req.params.layoutId});
+        const instancesForDelete = getFragmentsInstances(layout);
+        instancesForDelete.forEach(async fragmentInstance => await Preferences.remove({fragmentInstanceId: fragmentInstance}));
         res.status(200).json({message: "success"})
     } catch (e) {
         onError(res, e)
