@@ -2,13 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {Layout} from "../../models/Layout";
 import {Observable} from "rxjs/index";
 import {LayoutsService} from "../../services/layouts.service";
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {MatExpansionPanel} from '@angular/material/expansion';
 import {Fragment} from "../../models/Fragment";
 import {FragmentsService} from "../../services/fragments.service";
 import {FragmentsDialogComponent} from "./fragments-dialog/fragments-dialog.component";
 import {PreferencesDialogComponent} from "./preferences-dialog/preferences-dialog.component";
-import {MatDialog} from '@angular/material';
 import htmlBuilder from "./html-builder";
 import {FragmentInstance} from "../../models/FragmentInstance";
 import {PreferencesService} from "../../services/preferences.service";
@@ -29,7 +28,6 @@ export class LayoutsComponent implements OnInit {
   public _fragments: Fragment[] = [];
   public _newLayoutForm: Layout = new Layout();
   public _preferences: Preferences[];
-  public _portals$: Observable<string[]>;
 
   _filterValue: string;
 
@@ -42,12 +40,13 @@ export class LayoutsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateLayouts();
-    this.fragmentsService.fetch().subscribe(res => {
-      this._fragments = res;
+    this.portalService.currentPortal.subscribe(_ => {
+      this.updateLayouts();
+      this.fragmentsService.fetch().subscribe(res => {
+        this._fragments = res;
+      });
+      this.updatePreferencesData();
     });
-    this.updatePreferencesData();
-    this._portals$ = this.portalService.getPortals();
   }
 
   updatePreferencesData(){

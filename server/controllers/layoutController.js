@@ -4,7 +4,9 @@ const Preferences = require('../models/Preferences');
 
 module.exports.getAll = async function (req, res) {
     try {
-        const result = await Layout.find({})
+        const result = await Layout.find({
+            portalName: req.param('portalName')
+        })
             .populate('structure.rows.columns.fragments.fragmentType');
         res.status(200).json(result);
     } catch (e) {

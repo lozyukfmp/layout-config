@@ -2,7 +2,9 @@ const Fragment = require('../models/Fragment');
 
 module.exports.getAll = async function (req, res) {
     try {
-        const fragments = await Fragment.find({});
+        const fragments = await Fragment.find({
+            portalName: req.param('portalName')
+        });
         res.status(200).json(fragments);
     } catch (e) {
         onError(res, e)

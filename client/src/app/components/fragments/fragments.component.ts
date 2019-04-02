@@ -17,7 +17,6 @@ export class FragmentsComponent implements OnInit {
   public _fragments: Observable<Fragment[]>;
   public _newFragmentForm: Fragment = new Fragment();
   public _attributesValues: string[] = ['', 'async', 'primary'];
-  public _portals$: Observable<string[]>;
 
   _filterValue: string;
 
@@ -29,8 +28,7 @@ export class FragmentsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateFragments();
-    this._portals$ = this.portalService.getPortals();
+    this.portalService.currentPortal.subscribe(_ => this.updateFragments());
   }
 
   updateFragments() {

@@ -31,6 +31,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
 import {PreferencesComponent} from "./components/fragments/preferences/preferences.component";
 import {PreferencesDialogComponent} from "./components/layouts/preferences-dialog/preferences-dialog.component";
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import {PreferencesDialogComponent} from "./components/layouts/preferences-dialo
     MatSlideToggleModule,
     MatTooltipModule,
     MatChipsModule,
-    MatCardModule
+    MatCardModule,
+    MatMenuModule
   ],
   entryComponents: [FragmentsDialogComponent, PreferencesDialogComponent],
   providers: [

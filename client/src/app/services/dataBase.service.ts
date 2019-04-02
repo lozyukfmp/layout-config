@@ -1,4 +1,4 @@
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs/index";
 import {tap} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material";
@@ -9,8 +9,10 @@ export abstract class DataBaseService<T> {
   constructor(protected _http: HttpClient, public snackBar: MatSnackBar, protected baseUrl:string) {
   }
 
-  fetch():Observable<T[]>{
-    return this._http.get<T[]>(this.baseUrl).pipe(
+  fetch(options?: {
+    params?: HttpParams | {[param: string]: string | string[];}
+  }): Observable<T[]>{
+    return this._http.get<T[]>(this.baseUrl, options).pipe(
       tap(
         data => data,
         error => this.handleError(error)

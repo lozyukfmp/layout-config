@@ -3,17 +3,26 @@
       <mat-icon class="example-icon p-0">pages</mat-icon>
       <span>Layouts & Preferences Storage</span>
       <span class="example-spacer"></span>
+      <button mat-button [matMenuTriggerFor]="portalMenu">
+        {{activePortal | async}} <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
       <a mat-button *ngFor="let link of _links" routerLinkActive="active" [routerLink]="[link.url]">{{link.name}}</a>
       <button mat-icon-button (click)="logout($event)" matTooltip="Logout">
         <mat-icon>exit_to_app</mat-icon>
       </button>
     </mat-toolbar-row>
 </mat-toolbar>
+
 <main class="content">
   <router-outlet></router-outlet>
 </main>
+
 <mat-toolbar class="app-footer">
   <div class="_page-limiter app-footer_copyright">
     Layout Service Configuration v:0.0.1  <br> Netcracker, Research & Sales Support. Minsk. 2018
   </div>
 </mat-toolbar>
+
+<mat-menu #portalMenu="matMenu">
+  <button mat-menu-item *ngFor="let portal of portals$ | async" (click)="changePortal(portal)">{{portal}}</button>
+</mat-menu>
