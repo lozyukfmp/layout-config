@@ -64,6 +64,12 @@
       <input matInput placeholder="Name" [(ngModel)]="layout.name" required>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Portal Name</mat-label>
+      <mat-select [(value)]="layout.portalName">
+        <mat-option *ngFor="let portal of _portals$ | async" value="{{portal}}">{{portal}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
       <input matInput placeholder="Tenant" [(ngModel)]="layout.tenant">
     </mat-form-field>
   </div>

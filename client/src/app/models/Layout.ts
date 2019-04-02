@@ -6,12 +6,14 @@ export class Layout {
   tenant: string;
   structure: LayoutStructure;
   innerHtml: string;
+  portalName: string;
 
   constructor() {
     this.name = "";
     this.tenant = "DEFAULT";
     this.structure = new LayoutStructure();
     this.innerHtml = "";
+    this.portalName = "";
   }
 }
 

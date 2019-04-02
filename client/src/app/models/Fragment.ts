@@ -9,6 +9,7 @@ export class Fragment {
   customContent: string;
   hasPreferences: boolean;
   preferencesDefinition: PreferencesType[];
+  portalName: string;
 
   constructor() {
     this.isCustom = false;
@@ -18,5 +19,6 @@ export class Fragment {
     this.customContent = "";
     this.hasPreferences = false;
     this.preferencesDefinition = [];
+    this.portalName = "";
   }
 }

@@ -13,6 +13,7 @@ import htmlBuilder from "./html-builder";
 import {FragmentInstance} from "../../models/FragmentInstance";
 import {PreferencesService} from "../../services/preferences.service";
 import {Preferences} from "../../models/Preferences";
+import {PortalService} from "../../services/portal.service";
 
 @Component({
   selector: 'app-layouts',
@@ -28,6 +29,7 @@ export class LayoutsComponent implements OnInit {
   public _fragments: Fragment[] = [];
   public _newLayoutForm: Layout = new Layout();
   public _preferences: Preferences[];
+  public _portals$: Observable<string[]>;
 
   _filterValue: string;
 
@@ -35,7 +37,8 @@ export class LayoutsComponent implements OnInit {
               private fragmentsService: FragmentsService,
               private preferencesService: PreferencesService,
               public snackBar: MatSnackBar,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private portalService: PortalService) {
   }
 
   ngOnInit() {
@@ -44,6 +47,7 @@ export class LayoutsComponent implements OnInit {
       this._fragments = res;
     });
     this.updatePreferencesData();
+    this._portals$ = this.portalService.getPortals();
   }
 
   updatePreferencesData(){

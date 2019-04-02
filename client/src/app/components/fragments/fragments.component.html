@@ -91,6 +91,12 @@
     <!--<mat-form-field *ngIf="!fragment.isCustom">-->
       <!--<input matInput placeholder="Common Dependencies" [(ngModel)]="fragment.commonDependencies">-->
     <!--</mat-form-field>-->
+    <mat-form-field>
+      <mat-label>Portal Name</mat-label>
+      <mat-select [(value)]="fragment.portalName">
+        <mat-option *ngFor="let portal of _portals$ | async" value="{{portal}}">{{portal}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field *ngIf="fragment.isCustom" class="custom-content-field">
       <textarea matInput placeholder="Content" [(ngModel)]="fragment.customContent"></textarea>
     </mat-form-field>

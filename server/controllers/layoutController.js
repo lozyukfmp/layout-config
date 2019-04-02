@@ -27,7 +27,8 @@ module.exports.add = async function (req, res) {
             name: req.body.name,
             structure: req.body.structure,
             tenant: req.body.tenant,
-            innerHtml: req.body.innerHtml
+            innerHtml: req.body.innerHtml,
+            portalName: req.body.portalName
         }).save();
         res.status(201).json(layout);
     } catch (e) {

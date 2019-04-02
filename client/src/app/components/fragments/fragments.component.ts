@@ -3,6 +3,7 @@ import {Fragment} from "../../models/Fragment";
 import {FragmentsService} from "../../services/fragments.service";
 import {MatSnackBar} from '@angular/material';
 import {Observable} from "rxjs/index";
+import {PortalService} from "../../services/portal.service";
 
 @Component({
   selector: 'app-fragments',
@@ -16,16 +17,20 @@ export class FragmentsComponent implements OnInit {
   public _fragments: Observable<Fragment[]>;
   public _newFragmentForm: Fragment = new Fragment();
   public _attributesValues: string[] = ['', 'async', 'primary'];
+  public _portals$: Observable<string[]>;
 
   _filterValue: string;
 
   readonly URL_PATTERN: string = '(http://|https://)\\S+';
 
-  constructor(private fragmentService: FragmentsService, public snackBar: MatSnackBar) {
+  constructor(private fragmentService: FragmentsService,
+              public snackBar: MatSnackBar,
+              private portalService: PortalService) {
   }
 
   ngOnInit() {
     this.updateFragments();
+    this._portals$ = this.portalService.getPortals();
   }
 
   updateFragments() {
