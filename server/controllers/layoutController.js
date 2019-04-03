@@ -4,7 +4,9 @@ const Preferences = require('../models/Preferences');
 
 module.exports.getAll = async function (req, res) {
     try {
-        const result = await Layout.find({})
+        const result = await Layout.find({
+            portalName: req.param('portalName')
+        })
             .populate('structure.rows.columns.fragments.fragmentType');
         res.status(200).json(result);
     } catch (e) {
@@ -27,7 +29,8 @@ module.exports.add = async function (req, res) {
             name: req.body.name,
             structure: req.body.structure,
             tenant: req.body.tenant,
-            innerHtml: req.body.innerHtml
+            innerHtml: req.body.innerHtml,
+            portalName: req.body.portalName
         }).save();
         res.status(201).json(layout);
     } catch (e) {

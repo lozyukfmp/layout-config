@@ -33,8 +33,12 @@ const layoutSchema = new Schema({
                 }]
             }
         ]
+    },
+    portalName: {
+        type: String,
+        required: true,
+        default: ''
     }
-
 });
 
 module.exports = mongoose.model('layouts', layoutSchema);
