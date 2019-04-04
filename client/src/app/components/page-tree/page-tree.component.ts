@@ -1,7 +1,8 @@
 import {Component} from "@angular/core";
-import {PageTreeService, TodoItemFlatNode, TodoItemNode} from "../../services/page-tree.service";
+import {PageTreeService, TodoItemFlatNode} from "../../services/page-tree/page-tree.service";
 import {FlatTreeControl} from "@angular/cdk/tree";
 import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
+import {Page} from "../../models/Page";
 
 @Component({
   selector: 'app-page-tree',
@@ -10,23 +11,23 @@ import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
 })
 export class PageTreeComponent {
 
-  flatNodeMap = new Map<TodoItemFlatNode, TodoItemNode>();
+  flatNodeMap = new Map<TodoItemFlatNode, Page>();
 
-  nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
+  nestedNodeMap = new Map<Page, TodoItemFlatNode>();
 
   treeControl: FlatTreeControl<TodoItemFlatNode>;
 
-  treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
+  treeFlattener: MatTreeFlattener<Page, TodoItemFlatNode>;
 
-  dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
+  dataSource: MatTreeFlatDataSource<Page, TodoItemFlatNode>;
 
-  constructor(private database: PageTreeService) {
+  constructor(private pageTreeService: PageTreeService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    database.dataChange.subscribe(data => {
+    pageTreeService.dataChange.subscribe(data => {
       this.dataSource.data = data;
     });
   }
@@ -35,18 +36,18 @@ export class PageTreeComponent {
 
   isExpandable = (node: TodoItemFlatNode) => node.expandable;
 
-  getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
+  getChildren = (node: Page): Page[] => node.children;
 
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.url === '';
 
-  transformer = (node: TodoItemNode, level: number) => {
+  transformer = (node: Page, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.item === node.item
+    const flatNode = existingNode && existingNode.url === node.url
       ? existingNode
       : new TodoItemFlatNode();
-    flatNode.item = node.item;
+    flatNode.url = node.url;
     flatNode.level = level;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
@@ -55,17 +56,22 @@ export class PageTreeComponent {
 
   addNewItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
-    this.database.insertItem(parentNode!, '');
+    this.pageTreeService.insertItem(parentNode!, '', node.level);
     this.treeControl.expand(node);
   }
 
   removeItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
-    this.database.deleteItem(parentNode);
+    this.pageTreeService.deleteItem(parentNode);
   }
 
   saveNode(node: TodoItemFlatNode, itemValue: string) {
     const nestedNode = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode!, itemValue);
+    this.pageTreeService.updateItem(nestedNode!, itemValue, node.level);
+  }
+
+  selectPage(node: TodoItemFlatNode) {
+    const nestedNode = this.flatNodeMap.get(node);
+    this.pageTreeService.changePage(nestedNode);
   }
 }

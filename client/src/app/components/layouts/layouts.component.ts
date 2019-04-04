@@ -13,6 +13,7 @@ import {FragmentInstance} from "../../models/FragmentInstance";
 import {PreferencesService} from "../../services/preferences.service";
 import {Preferences} from "../../models/Preferences";
 import {PortalService} from "../../services/portal.service";
+import {PageTreeService} from "../../services/page-tree/page-tree.service";
 
 @Component({
   selector: 'app-layouts',
@@ -24,10 +25,10 @@ export class LayoutsComponent implements OnInit {
 
   public _expandedNewForm = false;
   public _crudLoading = false;
-  public _layouts: Observable<Layout[]>;
   public _fragments: Fragment[] = [];
   public _newLayoutForm: Layout = new Layout();
   public _preferences: Preferences[];
+  public _layout: Layout;
 
   _filterValue: string;
 
@@ -36,17 +37,18 @@ export class LayoutsComponent implements OnInit {
               private preferencesService: PreferencesService,
               public snackBar: MatSnackBar,
               public dialog: MatDialog,
-              private portalService: PortalService) {
+              private portalService: PortalService,
+              private pageTreeService: PageTreeService) {
   }
 
   ngOnInit() {
     this.portalService.currentPortal.subscribe(_ => {
-      this.updateLayouts();
       this.fragmentsService.fetch().subscribe(res => {
         this._fragments = res;
       });
       this.updatePreferencesData();
     });
+    this.pageTreeService.activePage.subscribe(page => this._layout = page.layout);
   }
 
   updatePreferencesData(){
@@ -57,7 +59,6 @@ export class LayoutsComponent implements OnInit {
 
   updateLayouts() {
     this._expandedNewForm = false;
-    this._layouts = this.layoutsService.fetch();
     this._crudLoading = false;
   }
 

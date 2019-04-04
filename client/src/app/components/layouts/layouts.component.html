@@ -1,6 +1,7 @@
 <mat-toolbar>
   <div class="_page-limiter layout-component-head">
-    <mat-icon>table_chart</mat-icon> Layouts
+    <mat-icon>table_chart</mat-icon>
+    Layouts
     <app-search-box
       class="layout-component-head__search-box"
       placeholder='Search by name..'
@@ -9,56 +10,28 @@
   </div>
 </mat-toolbar>
 
-<app-page-tree></app-page-tree>
+<div class="page-content">
 
-<div class="_page-limiter">
-  <mat-accordion class="layout-component-body headers-align">
-    <!--new layouts-->
-    <mat-expansion-panel hideToggle [expanded]="_expandedNewForm" (opened)="_expandedNewForm = true">
-      <mat-expansion-panel-header>
-        <mat-panel-title> New Layout </mat-panel-title>
-        <mat-panel-description class="_new"> <mat-icon>add_circle</mat-icon> </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: _newLayoutForm}"></ng-container>
-
+  <app-page-tree></app-page-tree>
+  <div class="layout-component-body">
+    <mat-card>
+      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: _layout}"></ng-container>
       <mat-action-row *ngIf="!_crudLoading; else loader">
-        <button mat-button (click)="_rollBackNewFrom()">
-          <mat-icon>settings_backup_restore</mat-icon> Clear
+        <button mat-button (click)="_revertData()">
+          <mat-icon>settings_backup_restore</mat-icon>
+          Cancel
         </button>
-        <button mat-button (click)="_createLayout()">
-          <mat-icon>save</mat-icon> Create
+        <button mat-button (click)="_editLayout(layout)">
+          <mat-icon>save</mat-icon>
+          Save Changes
+        </button>
+        <button mat-button (click)="_deleteLayout(layout)">
+          <mat-icon>delete_forever</mat-icon>
+          Delete
         </button>
       </mat-action-row>
-    </mat-expansion-panel>
-
-    <hr>
-    <!--created Layouts-->
-    <ng-container *ngIf="_layouts | async as layouts; else loader">
-      <ng-container *ngFor="let layout of layouts | filterArray: {name: _filterValue}">
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title> {{layout.name}} </mat-panel-title>
-            <mat-panel-description> {{layout.tenant || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>
-          </mat-expansion-panel-header>
-
-          <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: layout}"></ng-container>
-
-          <mat-action-row *ngIf="!_crudLoading; else loader">
-            <button mat-button (click)="_revertData()">
-              <mat-icon>settings_backup_restore</mat-icon> Cancel
-            </button>
-            <button mat-button (click)="_editLayout(layout)">
-              <mat-icon>save</mat-icon> Save Changes
-            </button>
-            <button mat-button (click)="_deleteLayout(layout)">
-              <mat-icon>delete_forever</mat-icon> Delete
-            </button>
-          </mat-action-row>
-        </mat-expansion-panel>
-      </ng-container>
-    </ng-container>
-  </mat-accordion>
+    </mat-card>
+  </div>
 </div>
 
 <ng-template #layoutForm let-layout>

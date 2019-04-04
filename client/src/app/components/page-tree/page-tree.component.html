@@ -1,6 +1,6 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-    <button mat-button>{{node.item}}</button>
+    <button mat-button (click)="selectPage(node)">{{node.url}}</button>
     <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
   </mat-tree-node>
 
@@ -19,7 +19,7 @@
         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
       </mat-icon>
     </button>
-    <button mat-button>{{node.item}}</button>
+    <button mat-button (click)="selectPage(node)">{{node.url}}</button>
     <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
     <button mat-icon-button (click)="removeItem(node)"><mat-icon>remove</mat-icon></button>
   </mat-tree-node>
