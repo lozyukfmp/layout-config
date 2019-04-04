@@ -1,0 +1,48 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$my-app-primary: mat-palette($mat-teal);
+$my-app-accent:  mat-palette($mat-cyan, 500, 900, A100);
+$my-app-warn:    mat-palette($mat-red);
+
+$my-app-theme: mat-dark-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+@include angular-material-theme($my-app-theme);
+
+.example-full-width{
+  width: 100% !important;
+}
+input.mat-input-element{
+  caret-color: mat-color($my-app-accent);
+}
+.mat-form-field.mat-focused .mat-form-field-label{
+  color: mat-color($my-app-accent);
+}
+.app-background {
+  background: #303030;
+}
+.mat-snack-bar-container._error span{
+  color: mat-color($my-app-warn);
+}
+.mat-snack-bar-container._success span{
+  color: mat-color($my-app-accent);
+}
+.mat-simple-snackbar span{
+  color: black;
+}
+
+.mat-expansion-panel-spacing.mat-expanded {
+  border: 1px solid mat-color($my-app-primary);
+}
+.panel-form-body{
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+.layout-component-body .col{
+  background-color: mat-color($my-app-accent, 0.4) !important;
+}
+
+.layout-component-body .row-controls {
+  background-color: mat-color($my-app-primary) !important;
+  border-bottom: 2px solid #424242;
+  border-top: 2px solid #424242;
+}
