@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth/auth.service";
-import {PortalService} from "../../services/portal.service";
-import {Observable} from "rxjs";
+import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth/auth.service';
+import {PortalService} from '../../services/portal.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-site-layout',
@@ -13,6 +13,7 @@ export class SiteLayoutComponent implements OnInit {
 
   public _links = [
     {url: '/fragments', name: 'Fragments'},
+    {url: '/tenants', name: 'Tenants'},
     {url: '/layouts', name: 'Layouts'}
   ];
 
