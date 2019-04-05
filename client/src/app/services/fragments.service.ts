@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material';
 import {DataBaseService} from './dataBase.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {PortalService} from './portal.service';
-import {switchMap} from 'rxjs/internal/operators';
+import {switchMap, tap} from 'rxjs/internal/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,18 @@ export class FragmentsService extends DataBaseService<FragmentSchema> {
   }
 
   public create(body: any): Observable<FragmentSchema> {
-    body.portalName = this.portalService.getCurrentValue();
+    return this.portalService.currentPortal
+      .pipe(
+        switchMap(portal => {
+          return super.create({
+            ...body,
+            portalName: portal
+            });
+        }),
+        tap(val =>
+          this.fetch().subscribe(result => this.fragments.next(result))
+        )
+      );
     return super.create(body);
   }
 }
