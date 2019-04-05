@@ -54,6 +54,5 @@ export class FragmentsService extends DataBaseService<FragmentSchema> {
           this.fetch().subscribe(result => this.fragments.next(result))
         )
       );
-    return super.create(body);
   }
 }
