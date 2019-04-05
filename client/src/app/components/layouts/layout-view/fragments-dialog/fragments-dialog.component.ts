@@ -1,9 +1,9 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {Fragment} from "../../../models/Fragment";
+import {FragmentSchema} from '../../../../models/FragmentSchema';
 import {map, startWith} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
-import {Observable} from "rxjs/index";
+import {Observable} from 'rxjs/index';
 
 @Component({
   selector: 'fragments-dialog',
@@ -11,17 +11,17 @@ import {Observable} from "rxjs/index";
   styleUrls: ['./fragments-dialog.component.less']
 })
 export class FragmentsDialogComponent {
-  public _fragments: Fragment[] = [];
-  public _filteredOptions: Observable<Fragment[]>;
+  public _fragments: FragmentSchema[] = [];
+  public _filteredOptions: Observable<FragmentSchema[]>;
   public _fragmentsControl = new FormControl();
 
   constructor(
     public dialogRef: MatDialogRef<FragmentsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Fragment[]) {
+    @Inject(MAT_DIALOG_DATA) public data: FragmentSchema[]) {
     this._fragments = data;
     this._filteredOptions = this._fragmentsControl.valueChanges
       .pipe(
-        startWith<string | Fragment>(''),
+        startWith<string | FragmentSchema>(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filter(name) : this._fragments.slice())
       );
@@ -31,11 +31,11 @@ export class FragmentsDialogComponent {
     this.dialogRef.close();
   }
 
-  _displayFragmentName(fragment?: Fragment): string | undefined {
+  _displayFragmentName(fragment?: FragmentSchema): string | undefined {
     return fragment ? fragment.name : undefined;
   }
 
-  private _filter(name: string): Fragment[] {
+  private _filter(name: string): FragmentSchema[] {
     const filterValue = name.toLowerCase();
     return this._fragments.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
   }

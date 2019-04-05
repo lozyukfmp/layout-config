@@ -1,11 +1,11 @@
-import {Fragment} from "./Fragment";
+import {FragmentSchema} from './FragmentSchema';
 
 export class FragmentInstance {
-  _id?:string;
-  instanceId: string;
-  fragmentType: Fragment;
-  constructor(  fragmentType: Fragment){
-    this.fragmentType = fragmentType;
-    this.instanceId = new Date().getTime().toString();
+  _id?: string;
+  fragmentSchema: FragmentSchema;
+  preferenceValues: {[key: string]: string};
+  constructor(fragmentSchema: FragmentSchema) {
+    this.fragmentSchema = fragmentSchema;
+    this.preferenceValues = {};
   }
 }

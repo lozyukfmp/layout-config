@@ -35,7 +35,7 @@
     </mat-expansion-panel>
     <hr>
     <!--created fragments-->
-    <ng-container *ngIf="_fragments | async as fragments; else loader">
+    <ng-container *ngIf="fragments$ | async as fragments; else loader">
       <ng-container *ngFor="let fragment of fragments | filterArray: {name: _filterValue}">
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
@@ -94,7 +94,7 @@
     <mat-form-field *ngIf="fragment.isCustom" class="custom-content-field">
       <textarea matInput placeholder="Content" [(ngModel)]="fragment.customContent"></textarea>
     </mat-form-field>
-    <app-preferences class="preferences-field" [preferencesDefinitions]="fragment.preferencesDefinition" *ngIf="fragment.hasPreferences"></app-preferences>
+    <app-preferences class="preferences-field" [preferencesDefinitions]="fragment.preferenceSchemas" *ngIf="fragment.hasPreferences"></app-preferences>
   </div>
 </ng-template>
 

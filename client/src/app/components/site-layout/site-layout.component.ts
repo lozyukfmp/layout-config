@@ -14,7 +14,7 @@ export class SiteLayoutComponent implements OnInit {
   public _links = [
     {url: '/fragments', name: 'Fragments'},
     {url: '/tenants', name: 'Tenants'},
-    {url: '/layouts', name: 'Layouts'}
+    {url: '/pages', name: 'Pages'}
   ];
 
   public activePortal: Observable<string>;

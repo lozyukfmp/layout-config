@@ -27,12 +27,12 @@ const fragmentSchema = new Schema({
         type: Boolean,
         default: false
     },
-    preferencesDefinition: [Schema.Types.Mixed],
     portalName: {
         type: String,
         required: true,
         default: ''
-    }
+    },
+    preferenceSchemas: [Schema.Types.Mixed]
 });
 
-module.exports = mongoose.model('fragments', fragmentSchema);
+module.exports = mongoose.model('FragmentSchema', fragmentSchema);

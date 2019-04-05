@@ -1,8 +1,8 @@
-const Fragment = require('../models/Fragment');
+const FragmentSchema = require('../models/FragmentSchema');
 
 module.exports.getAll = async function (req, res) {
     try {
-        const fragments = await Fragment.find({
+        const fragments = await FragmentSchema.find({
             portalName: req.param('portalName')
         });
         res.status(200).json(fragments);
@@ -13,7 +13,7 @@ module.exports.getAll = async function (req, res) {
 
 module.exports.get = async function (req, res) {
     try {
-        const fragments = await Fragment.findById(req.params.fragmentId);
+        const fragments = await FragmentSchema.findById(req.params.fragmentId);
         res.status(200).json(fragments);
     } catch (e) {
         onError(res, e)
@@ -22,7 +22,7 @@ module.exports.get = async function (req, res) {
 
 module.exports.add = async function (req, res) {
     try {
-        const fragment = await new Fragment(req.body).save();
+        const fragment = await new FragmentSchema(req.body).save();
         res.status(201).json(fragment);
     } catch (e) {
         onError(res, e)
@@ -31,7 +31,7 @@ module.exports.add = async function (req, res) {
 
 module.exports.update = async function (req, res) {
     try {
-        const fragment = await Fragment.findOneAndUpdate(
+        const fragment = await FragmentSchema.findOneAndUpdate(
             {_id: req.params.fragmentId},
             {$set: req.body},
             {new: true}
@@ -44,7 +44,7 @@ module.exports.update = async function (req, res) {
 
 module.exports.remove = async function (req, res) {
     try {
-        await Fragment.remove({_id: req.params.fragmentId});
+        await FragmentSchema.remove({_id: req.params.fragmentId});
         res.status(200).json({message: "success"})
     } catch (e) {
         onError(res, e)

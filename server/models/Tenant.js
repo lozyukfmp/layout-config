@@ -11,7 +11,7 @@ const preferencesValuesSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    },
+    }
 });
 
 module.exports = mongoose.model('tenants', preferencesValuesSchema);

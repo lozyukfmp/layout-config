@@ -1,0 +1,88 @@
+<mat-toolbar>
+  <div class="_page-limiter layout-component-head">
+    <mat-icon>table_chart</mat-icon> Pages
+    <app-search-box
+      class="layout-component-head__search-box"
+      placeholder='Search by name..'
+      (searchValueChanged)="_filterValue = $event"
+    ></app-search-box>
+  </div>
+</mat-toolbar>
+<div class="_page-limiter">
+  <mat-accordion class="layout-component-body headers-align">
+    <!--new layouts-->
+    <mat-expansion-panel hideToggle [expanded]="_expandedNewForm" (opened)="_expandedNewForm = true">
+      <mat-expansion-panel-header>
+        <mat-panel-title> New Page </mat-panel-title>
+        <mat-panel-description class="_new"> <mat-icon>add_circle</mat-icon> </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <ng-container *ngTemplateOutlet="pageForm; context: {$implicit: _newPageForm}"></ng-container>
+
+      <mat-action-row *ngIf="!_crudLoading; else loader">
+        <button mat-button (click)="_rollBackNewFrom()">
+          <mat-icon>settings_backup_restore</mat-icon> Clear
+        </button>
+        <button mat-button (click)="_createPage()">
+          <mat-icon>save</mat-icon> Create
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <hr>
+    <!--created Layouts-->
+    <ng-container *ngIf="pages$ | async as pages; else loader">
+      <ng-container *ngFor="let page of pages | filterArray: {name: _filterValue}">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> {{page.name}} </mat-panel-title>
+            <mat-panel-description> {{page.layout.tenant || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ng-container *ngTemplateOutlet="pageForm; context: {$implicit: page}"></ng-container>
+
+          <mat-action-row *ngIf="!_crudLoading; else loader">
+            <button mat-button (click)="_revertData()">
+              <mat-icon>settings_backup_restore</mat-icon> Cancel
+            </button>
+            <button mat-button (click)="_editPage(page)">
+              <mat-icon>save</mat-icon> Save Changes
+            </button>
+            <button mat-button (click)="_deletePage(page)">
+              <mat-icon>delete_forever</mat-icon> Delete
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container>
+    </ng-container>
+  </mat-accordion>
+</div>
+
+<ng-template #pageForm let-page>
+  <div class="panel-form-body">
+    <mat-form-field>
+      <input matInput placeholder="Name" [(ngModel)]="page.name" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-menu>
+        <button mat-menu-item
+                *ngFor="let layout of page.layouts"
+                (click)="selectedLayout = layout">
+          {{layout.tenant}}
+        </button>
+      </mat-menu>
+    </mat-form-field>
+  </div>
+
+  <div class="layout-configuration-map">
+      <layout-configuration-component
+        *ngIf="selectedLayout"
+        [(layout)]="selectedLayout"
+        [fragmentSchemas]="fragmentSchemas$ | async">
+      </layout-configuration-component>
+  </div>
+</ng-template>
+
+<ng-template #loader>
+  <mat-progress-bar class="app-loader" mode="indeterminate"></mat-progress-bar>
+</ng-template>

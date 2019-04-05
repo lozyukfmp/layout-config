@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {PreferencesType} from "../../../models/PreferencesType";
+import {Component, Input, OnInit} from '@angular/core';
+import {PreferenceSchema} from '../../../models/PreferencesSchema';
 
 @Component({
   selector: 'app-preferences',
@@ -8,20 +8,19 @@ import {PreferencesType} from "../../../models/PreferencesType";
 })
 export class PreferencesComponent implements OnInit {
 
-  @Input() public preferencesDefinitions: PreferencesType[];
+  @Input() public preferencesDefinitions: PreferenceSchema[];
 
-  public newPref: PreferencesType = new PreferencesType();
+  public newPref: PreferenceSchema = new PreferenceSchema();
   public types: string[] = ['number', 'string', 'boolean', 'array'];
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   addPref() {
     this.preferencesDefinitions.push(this.newPref);
-    this.newPref = new PreferencesType();
+    this.newPref = new PreferenceSchema();
   }
 
-  removePref(pref: PreferencesType) {
-    this.preferencesDefinitions = this.preferencesDefinitions.filter(item => item.key != pref.key);
+  removePref(pref: PreferenceSchema, index: number) {
+    this.preferencesDefinitions = this.preferencesDefinitions.filter((_, i) => i !== index);
   }
 }

@@ -1,25 +1,25 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {FragmentSchema} from '../models/FragmentSchema';
 import {environment} from '../../environments/environment';
 import {MatSnackBar} from '@angular/material';
 import {DataBaseService} from './dataBase.service';
-import {Observable} from 'rxjs';
 import {PortalService} from './portal.service';
+import {Observable} from 'rxjs';
+import {Page} from '../models/Page';
 import {switchMap} from 'rxjs/internal/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FragmentsService extends DataBaseService<FragmentSchema> {
+export class PagesService extends DataBaseService<Page> {
 
   constructor(private http: HttpClient,
               public snackBar: MatSnackBar,
               private portalService: PortalService) {
-    super(http, snackBar, `${environment.baseApiUrl}/fragments`);
+    super(http, snackBar, `${environment.baseApiUrl}/page`);
   }
 
-  public fetch(): Observable<FragmentSchema[]> {
+  public fetch(): Observable<Page[]> {
     return this.portalService.currentPortal
       .pipe(
         switchMap(portal => {
@@ -32,7 +32,7 @@ export class FragmentsService extends DataBaseService<FragmentSchema> {
       );
   }
 
-  public create(body: any): Observable<FragmentSchema> {
+  public create(body: any): Observable<Page> {
     body.portalName = this.portalService.getCurrentValue();
     return super.create(body);
   }

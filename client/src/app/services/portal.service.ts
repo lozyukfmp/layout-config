@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {BehaviorSubject, Observable, of} from "rxjs";
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 
 const portals: string[] = ['b2b-eCare', 'b2b-eCommerce', 'b2c-eCare', 'b2c-eCommerce', 'b2c-pos', 'b2b-pos'];
 

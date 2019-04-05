@@ -1,11 +1,11 @@
-const Preferences = require('../models/Preferences');
 const Layout = require('../models/Layout');
 
 module.exports.getDataForTenant = async function (req, res) {
     try {
         const tenant = req.params.tenant;
         const layouts = await Layout.find({});
-        const preferences = await Preferences.find({});
+        //const preferences = await Preferences.find({});
+        const preferences = {};
         const result = {
             layouts: convertLayouts(layouts, tenant),
             preferences: convertPreferences(preferences)

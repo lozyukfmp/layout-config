@@ -1,0 +1,13 @@
+<h1 mat-dialog-title class="_v-allign"><mat-icon>settings</mat-icon>
+  {{fragmentInstance.fragmentSchema.name}}</h1>
+<div mat-dialog-content class="dialog-preferences">
+    <ng-container *ngFor="let prefField of fragmentInstance.fragmentSchema.preferenceSchemas">
+      <mat-form-field class="custom-content-field">
+        <input matInput placeholder="{{prefField.displayName}}" [(ngModel)]="fragmentInstance.preferenceValues[prefField.key]">
+      </mat-form-field>
+    </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-button class="_v-allign" [mat-dialog-close]="fragmentInstance" cdkFocusInitial> <mat-icon>library_add</mat-icon>Save</button>
+  <button mat-button class="_v-allign" (click)="_onCancelClick()"><mat-icon>close</mat-icon>Cancel</button>
+</div>

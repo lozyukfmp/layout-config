@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Fragment} from "../../models/Fragment";
-import {FragmentsService} from "../../services/fragments.service";
+import {FragmentSchema} from '../../models/FragmentSchema';
+import {FragmentsService} from '../../services/fragments.service';
 import {MatSnackBar} from '@angular/material';
-import {Observable} from "rxjs/index";
-import {PortalService} from "../../services/portal.service";
+import {Observable} from 'rxjs/index';
 
 @Component({
   selector: 'app-fragments',
@@ -14,57 +13,46 @@ export class FragmentsComponent implements OnInit {
 
   public _expandedNewForm = false;
   public _crudLoading = false;
-  public _fragments: Observable<Fragment[]>;
-  public _newFragmentForm: Fragment = new Fragment();
-  public _attributesValues: string[] = ['', 'async', 'primary'];
+  public fragments$: Observable<FragmentSchema[]>;
+  public _newFragmentForm: FragmentSchema = new FragmentSchema();
 
   _filterValue: string;
 
-  readonly URL_PATTERN: string = '(http://|https://)\\S+';
-
   constructor(private fragmentService: FragmentsService,
-              public snackBar: MatSnackBar,
-              private portalService: PortalService) {
+              public snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
-    this.portalService.currentPortal.subscribe(_ => this.updateFragments());
+    this.fragments$ = this.fragmentService.fetch();
   }
 
-  updateFragments() {
+  resetState() {
     this._expandedNewForm = false;
-    this._fragments = this.fragmentService.fetch()
+    this._newFragmentForm = new FragmentSchema();
   }
 
   _revertData() {
-    this.updateFragments();
+    this.resetState();
   }
 
   public _createFragment() {
     this.fragmentService.create(this._newFragmentForm).subscribe(_ => {
-      this.snackBar.open("Fragment has been created", "", {duration: 2000, panelClass: "_success"});
-      this._rollBackNewFrom();
-      this.updateFragments();
-    })
+      this.snackBar.open('Fragment has been created', '', {duration: 2000, panelClass: '_success'});
+      this.resetState();
+    });
   }
 
-  _deleteFragment(fragment:Fragment){
+  _deleteFragment(fragment: FragmentSchema) {
     this.fragmentService.delete(fragment._id).subscribe(_ => {
-      this.snackBar.open("Fragment has been deleted", "", {duration: 2000, panelClass: "_success"});
-      this._rollBackNewFrom();
-      this.updateFragments();
-    })
+      this.snackBar.open('Fragment has been deleted', '', {duration: 2000, panelClass: '_success'});
+      this.resetState();
+    });
   }
 
-  _editFragment(fragment:Fragment){
+  _editFragment(fragment: FragmentSchema) {
     this.fragmentService.update(fragment).subscribe(_ => {
-      this.snackBar.open("Fragment has been updated", "", {duration: 2000, panelClass: "_success"});
-      this._rollBackNewFrom();
-      this.updateFragments();
-    })
-  }
-
-  public _rollBackNewFrom() {
-    this._newFragmentForm = new Fragment();
+      this.snackBar.open('Fragment has been updated', '', {duration: 2000, panelClass: '_success'});
+      this.resetState();
+    });
   }
 }

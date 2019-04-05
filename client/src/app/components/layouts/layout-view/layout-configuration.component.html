@@ -1,0 +1,61 @@
+<div class="layout-configuration-map">
+  <div class="row" *ngFor="let row of layout.structure.rows">
+    <ng-container *ngFor="let column of row.columns">
+      <div class="{{column.cssClass}}">
+        <div class="column-controls" *ngIf="fragmentSchemas.length > 0">
+          <button mat-mini-fab color="primary"
+                  (click)="_addFragmentInstance()"
+                  matTooltip="Add fragment">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <ng-container *ngFor="let fragmentInstance of column.fragmentInstances; let index = index">
+          <ng-container
+            *ngTemplateOutlet="fragmentInstanceTemplate; context: {
+                $implicit: fragmentInstance, fragmentInstances:
+                column.fragmentInstances, index: index
+              }"
+          ></ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+    <div class="row-controls">
+      <div class="row-controls__value">{{row.maxWidth || "-"}}</div>
+      <div class="row-controls__popover">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="Max Width" [(ngModel)]="row.maxWidth">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #fragmentInstanceTemplate
+             let-fragmentInstance
+             let-fragmentInstances="fragmentInstances"
+             let-index="index">
+  <div class="fragment">
+    <span class="fragment-info">
+      <mat-icon>receipt</mat-icon> {{fragmentInstance.fragmentSchema.name}}
+      <i style="opacity: 0.5; font-size: 11px">{{fragmentInstance._id}}</i>
+    </span>
+    <span class="fragment-controls">
+      <ng-container *ngIf="fragmentInstance.fragmentSchema.hasPreferences">
+        <button mat-icon-button (click)="_editPreferences(fragmentInstances, index)">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="fragments.length > 1">
+        <button mat-icon-button (click)="_moveUpFragmentInstance(fragmentInstances, index)">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="_moveDownFragmentInstance(fragmentInstances, index)">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+      </ng-container>
+      <button mat-icon-button (click)="_deleteFragment(fragmentInstances[index])">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+    </span>
+  </div>
+</ng-template>

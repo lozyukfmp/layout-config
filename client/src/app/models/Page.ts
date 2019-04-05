@@ -5,5 +5,9 @@ export class Page {
   name: string;
   innerHtml: string;
   portalName: string;
-  layout: Layout;
+  layouts: Layout[] = [];
+
+  constructor() {
+    this.layouts.push(new Layout());
+  }
 }
