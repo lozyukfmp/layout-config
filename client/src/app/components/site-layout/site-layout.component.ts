@@ -25,8 +25,8 @@ export class SiteLayoutComponent implements OnInit {
               private portalService: PortalService) { }
 
   ngOnInit() {
-    this.portals$ = this.portalService.getPortals();
-    this.activePortal = this.portalService.currentPortal;
+    this.portals$ = this.portalService.entities$;
+    this.activePortal = this.portalService.entity$;
   }
 
   logout(event: Event) {

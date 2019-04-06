@@ -23,7 +23,8 @@ export class FragmentsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fragments$ = this.fragmentService.fetch();
+    this.fragments$ = this.fragmentService.entities$;
+    this.fragmentService.fetch().subscribe();
   }
 
   resetState() {

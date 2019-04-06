@@ -20,7 +20,7 @@ export class PagesService extends DataBaseService<Page> {
   }
 
   public fetch(): Observable<Page[]> {
-    return this.portalService.currentPortal
+    return this.portalService.entity$
       .pipe(
         switchMap(portal => {
           return super.fetch({
@@ -33,7 +33,14 @@ export class PagesService extends DataBaseService<Page> {
   }
 
   public create(body: any): Observable<Page> {
-    body.portalName = this.portalService.getCurrentValue();
-    return super.create(body);
+    return this.portalService.entity$
+      .pipe(
+        switchMap(portal => {
+          return super.create({
+            ...body,
+            portalName: portal
+          });
+        })
+      );
   }
 }
