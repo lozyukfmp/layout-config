@@ -13,7 +13,6 @@ export abstract class DataBaseService<T extends BaseEntity> {
   protected constructor(protected _http: HttpClient, public snackBar: MatSnackBar, protected baseUrl: string) {}
 
   public fetch(options?: { params?: HttpParams | {[param: string]: string | string[]} }): Observable<T[]> {
-    console.log("SDFSDF");
     return this._http.get<T[]>(this.baseUrl, options)
       .pipe(
         tap(
