@@ -12,6 +12,11 @@ import {ArrayFilterPipe} from './shared/pipes/array-filter.pipe';
 import {TokenInterceptor} from './services/auth/token.interceptor';
 import {LoginPageComponent} from './components/login-page/login-page.component';
 import {LayoutConfigurationComponent} from './components/layouts/layout-view/layout-configuration.component';
+import {PreferencesComponent} from './components/fragments/preferences/preferences.component';
+import {PreferencesDialogComponent} from './components/layouts/layout-view/preferences-dialog/preferences-dialog.component';
+import {TenantsComponent} from './components/tenants/tenants.component';
+import {PagesComponent} from './components/layouts/pages.component';
+
 // material
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -29,11 +34,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
-import {PreferencesComponent} from './components/fragments/preferences/preferences.component';
-import {PreferencesDialogComponent} from './components/layouts/layout-view/preferences-dialog/preferences-dialog.component';
 import {MatMenuModule} from '@angular/material/menu';
-import {TenantsComponent} from './components/tenants/tenants.component';
-import {PagesComponent} from './components/layouts/pages.component';
 
 
 

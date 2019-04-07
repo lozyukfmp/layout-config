@@ -63,15 +63,17 @@
     <mat-form-field>
       <input matInput placeholder="Name" [(ngModel)]="page.name" required>
     </mat-form-field>
-    <mat-form-field>
-      <mat-menu>
-        <button mat-menu-item
-                *ngFor="let layout of page.layouts"
-                (click)="selectedLayout = layout">
-          {{layout.tenant}}
-        </button>
-      </mat-menu>
-    </mat-form-field>
+    <button mat-button [matMenuTriggerFor]="layoutsMenu">
+      {{selectedLayout?.tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+
+    <mat-menu #layoutsMenu="matMenu">
+      <button mat-menu-item
+              *ngFor="let tenant of (tenants$ | async)"
+              (click)="selectedLayout = findLayoutByTenant(page, tenant)">
+        {{tenant.name}}
+      </button>
+    </mat-menu>
   </div>
 
   <div class="layout-configuration-map">

@@ -1,12 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Layout} from '../../models/Layout';
-import {Observable} from 'rxjs/index';
+import {forkJoin, Observable, Subscription} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
 import {MatExpansionPanel} from '@angular/material/expansion';
 import {FragmentsService} from '../../services/fragments.service';
 import {Page} from '../../models/Page';
 import {PagesService} from '../../services/pages.service';
 import {FragmentSchema} from '../../models/FragmentSchema';
+import {switchMap} from "rxjs/operators";
+import {PortalService} from "../../services/portal.service";
+import {Tenant} from "../../models/Tenant";
+import {TenantService} from "../../services/tenants.service";
 
 @Component({
   selector: 'app-layouts',
@@ -14,24 +18,49 @@ import {FragmentSchema} from '../../models/FragmentSchema';
   templateUrl: './pages.component.html',
   styleUrls: ['./pages.component.less']
 })
-export class PagesComponent implements OnInit {
+export class PagesComponent implements OnInit, OnDestroy {
   public _expandedNewForm = false;
   public _crudLoading = false;
   public pages$: Observable<Page[]>;
   public fragmentSchemas$: Observable<FragmentSchema[]>;
+  public tenants$: Observable<Tenant[]>;
   public selectedLayout: Layout;
   public _newPageForm: Page = new Page();
+
+  private portalChange: Subscription;
 
   _filterValue: string;
 
   constructor(private pagesService: PagesService,
-              private fragmentsService: FragmentsService,
+              private fragmentService: FragmentsService,
+              private tenantService: TenantService,
+              private portalService: PortalService,
               public snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
-    this.pages$ = this.pagesService.fetch();
-    this.fragmentSchemas$ = this.fragmentsService.fetch();
+    this.pages$ = this.pagesService.entities$;
+    this.fragmentSchemas$ = this.fragmentService.entities$;
+    this.tenants$ = this.tenantService.entities$;
+
+    this.tenantService.fetch().subscribe();
+
+    this.portalChange = this.portalService.entity$
+      .pipe(
+        switchMap(value => forkJoin(
+          this.fragmentService.fetch({
+            params: {
+              portalName: value
+            }
+          }),
+          this.pagesService.fetch()
+        ))
+      ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.portalChange.unsubscribe();
+    this.portalChange = null;
   }
 
   resetState() {
@@ -67,5 +96,16 @@ export class PagesComponent implements OnInit {
       this.snackBar.open('Fragment has been updated', '', {duration: 2000, panelClass: '_success'});
       this.resetState();
     });
+  }
+
+  findLayoutByTenant(page: Page, tenant: Tenant) {
+    let layout = page.layouts.find(layout => layout.tenant === tenant.name);
+
+    if (!layout) {
+      layout = new Layout(tenant.name);
+      page.layouts.push(layout);
+    }
+
+    return layout;
   }
 }

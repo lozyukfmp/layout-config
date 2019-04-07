@@ -6,8 +6,8 @@ export class Layout {
   innerHtml: string;
   structure: LayoutStructure;
 
-  constructor() {
-    this.tenant = 'DEFAULT';
+  constructor(tenant: string = 'DEFAULT') {
+    this.tenant = tenant;
     this.structure = new LayoutStructure();
   }
 }

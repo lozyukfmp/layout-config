@@ -42,6 +42,7 @@ export class FragmentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.portalChange.unsubscribe();
     this.portalChange = null;
   }
 

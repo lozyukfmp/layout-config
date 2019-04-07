@@ -6,7 +6,7 @@ import {DataBaseService} from './dataBase.service';
 import {PortalService} from './portal.service';
 import {Observable} from 'rxjs';
 import {Page} from '../models/Page';
-import {switchMap} from 'rxjs/internal/operators';
+import {first, switchMap} from 'rxjs/internal/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,19 +19,6 @@ export class PagesService extends DataBaseService<Page> {
     super(http, snackBar, `${environment.baseApiUrl}/page`);
   }
 
-  public fetch(): Observable<Page[]> {
-    return this.portalService.entity$
-      .pipe(
-        switchMap(portal => {
-          return super.fetch({
-            params: {
-              portalName: portal
-            }
-          });
-        })
-      );
-  }
-
   public create(body: any): Observable<Page> {
     return this.portalService.entity$
       .pipe(
@@ -40,7 +27,8 @@ export class PagesService extends DataBaseService<Page> {
             ...body,
             portalName: portal
           });
-        })
+        }),
+        first()
       );
   }
 }
