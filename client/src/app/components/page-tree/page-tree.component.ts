@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {ChangeDetectorRef, Component} from "@angular/core";
 import {PageTreeService, TodoItemFlatNode} from "../../services/page-tree/page-tree.service";
 import {FlatTreeControl} from "@angular/cdk/tree";
 import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
@@ -21,7 +21,8 @@ export class PageTreeComponent {
 
   dataSource: MatTreeFlatDataSource<Page, TodoItemFlatNode>;
 
-  constructor(private pageTreeService: PageTreeService) {
+  constructor(private pageTreeService: PageTreeService,
+              private cdr: ChangeDetectorRef) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -49,6 +50,7 @@ export class PageTreeComponent {
       : new TodoItemFlatNode();
     flatNode.url = node.url;
     flatNode.level = level;
+    flatNode.expandable = this.getChildren(node).length > 0;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
@@ -57,12 +59,13 @@ export class PageTreeComponent {
   addNewItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
     this.pageTreeService.insertItem(parentNode!, '', node.level);
-    this.treeControl.expand(node);
+    this.toggle(node);
   }
 
   removeItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
     this.pageTreeService.deleteItem(parentNode);
+    this.toggle(node);
   }
 
   saveNode(node: TodoItemFlatNode, itemValue: string) {
@@ -73,5 +76,15 @@ export class PageTreeComponent {
   selectPage(node: TodoItemFlatNode) {
     const nestedNode = this.flatNodeMap.get(node);
     this.pageTreeService.changePage(nestedNode);
+  }
+
+  toggle(node: TodoItemFlatNode) {
+    const parentItemNode = this.pageTreeService.getParentItemNode(this.flatNodeMap.get(node));
+    this.treeControl.expand(node);
+    if (parentItemNode) {
+      const parentItemFlatNode = this.nestedNodeMap.get(parentItemNode);
+      this.treeControl.toggle(parentItemFlatNode);
+      this.treeControl.toggle(parentItemFlatNode);
+    }
   }
 }

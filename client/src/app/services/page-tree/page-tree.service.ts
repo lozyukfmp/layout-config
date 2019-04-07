@@ -65,7 +65,7 @@ export class PageTreeService {
   }
 
   deleteItem(itemNode: Page) {
-    const parentNode: Page = this.getParentItemNode(this.data, itemNode);
+    const parentNode: Page = this.getParentItemNode(itemNode, this.data);
     parentNode.children = parentNode.children.filter(childNode => childNode.url !== itemNode.url);
     this.dataChange.next(this.data);
   }
@@ -76,17 +76,20 @@ export class PageTreeService {
     this.dataChange.next(this.data);
   }
 
-  private getParentItemNode(parentNodes: Page[], node: Page): Page {
-    if (!parentNodes) {
-      return undefined;
+  getParentItemNode(node: Page, parentNodes?: Page[]): Page {
+    if (parentNodes === null) {
+      return null;
+    }
+    if (parentNodes === undefined) {
+      parentNodes = this.data;
     }
     for (const parentNode of parentNodes) {
       if (parentNode.children.includes(node)) {
         return parentNode;
       }
-      return this.getParentItemNode(parentNode.children, node);
+      return this.getParentItemNode(node, parentNode.children);
     }
-    return undefined;
+    return null;
   }
 
   changePage(page: Page) {
