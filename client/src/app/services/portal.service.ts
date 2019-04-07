@@ -6,7 +6,7 @@ const portals: string[] = ['b2b-eCare', 'b2b-eCommerce', 'b2c-eCare', 'b2c-eComm
 @Injectable({
   providedIn: 'root'
 })
-export class PortalService extends DataBaseService<string> {
+export class PortalService extends DataBaseService<any> {
 
   constructor() {
     super(null, null, null);

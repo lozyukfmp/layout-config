@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material';
 import {DataBaseService} from './dataBase.service';
 import {Observable} from 'rxjs';
 import {PortalService} from './portal.service';
-import {switchMap} from 'rxjs/internal/operators';
+import {first, switchMap} from 'rxjs/internal/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,19 +18,6 @@ export class FragmentsService extends DataBaseService<FragmentSchema> {
     super(http, snackBar, `${environment.baseApiUrl}/fragments`);
   }
 
-  public fetch(): Observable<FragmentSchema[]> {
-    return this.portalService.entity$
-      .pipe(
-        switchMap(portal => {
-          return super.fetch({
-            params: {
-              portalName: portal
-            }
-          });
-        })
-      );
-  }
-
   public create(body: any): Observable<FragmentSchema> {
     return this.portalService.entity$
       .pipe(
@@ -39,7 +26,8 @@ export class FragmentsService extends DataBaseService<FragmentSchema> {
             ...body,
             portalName: portal
             });
-        })
+        }),
+        first()
       );
   }
 }

@@ -1,7 +1,7 @@
 import {PreferenceSchema} from './PreferencesSchema';
+import {BaseEntity} from "./BaseEntity";
 
-export class FragmentSchema {
-  _id?: string;
+export class FragmentSchema extends BaseEntity{
   name: string;
   description?: string;
   renderTag: string;
@@ -12,6 +12,8 @@ export class FragmentSchema {
   portalName: string;
 
   constructor() {
+    super();
+
     this.isCustom = false;
     this.name = '';
     this.description = '';
