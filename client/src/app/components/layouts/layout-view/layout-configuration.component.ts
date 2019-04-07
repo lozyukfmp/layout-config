@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 import {Layout} from '../../../models/Layout';
 import {FragmentsDialogComponent} from './fragments-dialog/fragments-dialog.component';
 import {isNullOrUndefined} from 'util';
@@ -11,7 +11,8 @@ import {MatDialog} from '@angular/material';
 @Component({
   selector: 'layout-configuration-component',
   templateUrl: 'layout-configuration.component.html',
-  styleUrls: ['./layout-configuration.component.less']
+  styleUrls: ['./layout-configuration.component.less'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LayoutConfigurationComponent {
   private _layout: Layout;

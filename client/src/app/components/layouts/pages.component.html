@@ -76,13 +76,12 @@
     </mat-menu>
   </div>
 
-  <div class="layout-configuration-map">
-      <layout-configuration-component
-        *ngIf="selectedLayout"
-        [(layout)]="selectedLayout"
-        [fragmentSchemas]="fragmentSchemas$ | async">
-      </layout-configuration-component>
-  </div>
+  <layout-configuration-component
+    *ngIf="selectedLayout"
+    [(layout)]="selectedLayout"
+    [fragmentSchemas]="fragmentSchemas$ | async">
+  </layout-configuration-component>
+
 </ng-template>
 
 <ng-template #loader>

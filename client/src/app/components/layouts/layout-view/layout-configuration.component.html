@@ -4,7 +4,7 @@
       <div class="{{column.cssClass}}">
         <div class="column-controls" *ngIf="fragmentSchemas.length > 0">
           <button mat-mini-fab color="primary"
-                  (click)="_addFragmentInstance()"
+                  (click)="_addFragmentInstance(column.fragmentInstances)"
                   matTooltip="Add fragment">
             <mat-icon>add</mat-icon>
           </button>
