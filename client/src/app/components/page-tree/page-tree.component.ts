@@ -56,9 +56,9 @@ export class PageTreeComponent {
     return flatNode;
   };
 
-  addNewItem(node: TodoItemFlatNode) {
-    const parentNode = this.flatNodeMap.get(node);
-    this.pageTreeService.insertItem(parentNode!, '', node.level);
+  addNewItem(node?: TodoItemFlatNode) {
+    const parentNode: Page = this.flatNodeMap.get(node);
+    this.pageTreeService.insertItem(parentNode!, '', node ? node.level: 0);
     this.toggle(node);
   }
 

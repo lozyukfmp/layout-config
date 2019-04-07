@@ -57,11 +57,16 @@ export class PageTreeService {
     }, []);
   }
 
-  insertItem(parent: Page, name: string, level: number) {
-    if (parent.children) {
-      parent.children.push({url: name, children: [], level: level} as Page);
-      this.dataChange.next(this.data);
+  insertItem(parent: Page, name: string, level: number): Page {
+    let currentData: Page[] = this.data;
+    const newPage = Object.assign(new Page(), {url: name, children: [], level: level});
+    if (parent) {
+      parent.children.push(newPage);
+    } else {
+      currentData.push(newPage);
     }
+    this.dataChange.next(currentData);
+    return newPage;
   }
 
   deleteItem(itemNode: Page) {
