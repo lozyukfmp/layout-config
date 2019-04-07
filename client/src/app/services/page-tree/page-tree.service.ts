@@ -65,9 +65,14 @@ export class PageTreeService {
   }
 
   deleteItem(itemNode: Page) {
-    const parentNode: Page = this.getParentItemNode(itemNode, this.data);
-    parentNode.children = parentNode.children.filter(childNode => childNode.url !== itemNode.url);
-    this.dataChange.next(this.data);
+    let currentData: Page[] = this.data;
+    const parentNode: Page = this.getParentItemNode(itemNode, currentData);
+    if (parentNode != null) {
+      parentNode.children = parentNode.children.filter(childNode => childNode.url !== itemNode.url);
+    } else {
+      currentData = currentData.filter(node => node.url !== itemNode.url);
+    }
+    this.dataChange.next(currentData);
   }
 
   updateItem(node: Page, name: string, level: number) {
