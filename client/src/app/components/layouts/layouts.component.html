@@ -17,8 +17,8 @@
   <div class="layout-container">
     <mat-form-field>
       <mat-label>Tenant</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let tenant of _tenants" [value]="tenant.name" (onSelectionChange)="setActiveLayout($event)">
+      <mat-select (selectionChange)="setActiveLayout($event.value)">
+        <mat-option *ngFor="let tenant of _tenants" [value]="tenant.name">
           {{tenant.name}}
         </mat-option>
       </mat-select>
@@ -32,7 +32,7 @@
             <mat-icon>settings_backup_restore</mat-icon>
             Cancel
           </button>
-          <button mat-button (click)="_editLayout(layout)">
+          <button mat-button (click)="_processLayout(layout)">
             <mat-icon>save</mat-icon>
             Save Changes
           </button>

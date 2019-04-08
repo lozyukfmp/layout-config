@@ -26,11 +26,10 @@ module.exports.get = async function (req, res) {
 module.exports.add = async function (req, res) {
     try {
         const layout = await new Layout({
-            name: req.body.name,
+            page: req.body.page,
             structure: req.body.structure,
             tenant: req.body.tenant,
             innerHtml: req.body.innerHtml,
-            portalName: req.body.portalName
         }).save();
         res.status(201).json(layout);
     } catch (e) {

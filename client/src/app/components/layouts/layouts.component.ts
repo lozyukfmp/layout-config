@@ -85,8 +85,16 @@ export class LayoutsComponent implements OnInit {
     this.updateLayouts();
   }
 
-  public _createLayout() {
+  public _processLayout() {
     this._crudLoading = true;
+    this.layoutsService.processLayout()
+      .subscribe(_ => {
+        this._rollBackNewFrom();
+        this.updateLayouts();
+      })
+  }
+
+  public _createLayout() {
     this._newLayoutForm.innerHtml = htmlBuilder(this._newLayoutForm);
     this.layoutsService.create(this._newLayoutForm).subscribe(_ => {
       this.snackBar.open('Layout has been created', '', {duration: 2000, panelClass: '_success'});
@@ -182,4 +190,5 @@ export class LayoutsComponent implements OnInit {
   setActiveLayout(tenant: string): void {
     this.layoutsService.setActiveLayout(tenant);
   }
+
 }
