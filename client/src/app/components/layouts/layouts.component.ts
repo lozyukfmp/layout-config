@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Layout} from "../../models/Layout";
-import {Observable} from "rxjs/index";
+import {BehaviorSubject, Observable, Subject} from "rxjs/index";
 import {PagesService} from "../../services/pages.service";
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {MatExpansionPanel} from '@angular/material/expansion';
@@ -16,6 +16,7 @@ import {PortalService} from "../../services/portal.service";
 import {Page} from "../../models/Page";
 import {Tenant} from "../../models/Tenant";
 import {TenantService} from "../../services/tenants.service";
+import {PageTreeService} from "../../services/page-tree/page-tree.service";
 
 @Component({
   selector: 'app-layouts',
@@ -33,6 +34,8 @@ export class LayoutsComponent implements OnInit {
   public _newLayoutForm: Page = new Page();
   public _preferences: Preferences[];
   public _selectedLayout: Layout = null;
+  public activePage$: BehaviorSubject<Page>;
+  public activeTenant: string;
 
   _filterValue: string;
 
@@ -42,7 +45,8 @@ export class LayoutsComponent implements OnInit {
               private tenantService: TenantService,
               public snackBar: MatSnackBar,
               public dialog: MatDialog,
-              private portalService: PortalService) {
+              private portalService: PortalService,
+              private pageTreeService: PageTreeService) {
   }
 
   ngOnInit() {
@@ -58,6 +62,7 @@ export class LayoutsComponent implements OnInit {
       .subscribe(response => {
         this._tenants = response;
       });
+    this.activePage$ = this.pageTreeService.activePage;
   }
 
   updatePreferencesData() {
@@ -170,16 +175,17 @@ export class LayoutsComponent implements OnInit {
     })
   }
 
-  findLayout(page: Page, name: string = 'DEFAULT') {
-    let layout = page.layouts.find(value => value.tenant === name);
-    if (!layout) {
-      layout = new Layout(name);
-      page.layouts.push(layout);
-    }
-    return layout;
-  }
+  findLayout(tenant: string = 'DEFAULT') {
+    let activePage = this.activePage$.getValue(),
+      layouts = activePage.layouts,
+      layout = layouts.find(layout => layout.tenant === tenant);
 
-  onPanelExpand(page: Page) {
-    this._selectedLayout = page.layouts.find(layout => layout.tenant === 'DEFAULT');
+    if (!layout) {
+      layout = new Layout(tenant);
+      layouts.push(layout);
+      this.activePage$.next(activePage);
+    }
+
+    return layout;
   }
 }

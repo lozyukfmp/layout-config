@@ -3,8 +3,8 @@
 </button>
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-    <div class="node-content" [ngClass]="{'_active': activePage?.url === node.url}">
-      <button mat-button (click)="selectPage(node)">{{node.url}}</button>
+    <div class="node-content" [ngClass]="{'_active': activePage?.name === node.name}">
+      <button mat-button (click)="selectPage(node)">{{node.name}}</button>
       <div class="action-buttons">
         <button mat-icon-button (click)="addNewItem(node)">
           <mat-icon>add</mat-icon>
@@ -17,7 +17,7 @@
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-    <div class="node-content" [ngClass]="{'_active': activePage?.url === node.url}">
+    <div class="node-content" [ngClass]="{'_active': activePage?.name === node.name}">
       <mat-form-field>
         <input matInput #itemValue placeholder="New item...">
       </mat-form-field>
@@ -31,14 +31,14 @@
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <div class="node-content" [ngClass]="{'_active': activePage?.url === node.url}">
+    <div class="node-content" [ngClass]="{'_active': activePage?.name === node.name}">
       <button *ngIf="node.expandable" mat-icon-button matTreeNodeToggle
               [attr.aria-label]="'toggle ' + node.filename">
         <mat-icon class="mat-icon-rtl-mirror">
           {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
         </mat-icon>
       </button>
-      <button mat-button (click)="selectPage(node)">{{node.url}}</button>
+      <button mat-button (click)="selectPage(node)">{{node.name}}</button>
       <div class="action-buttons">
         <button mat-icon-button (click)="addNewItem(node)">
           <mat-icon>add</mat-icon>

@@ -15,17 +15,17 @@
   <app-page-tree></app-page-tree>
   <div class="layout-component-body">
     <mat-card>
-      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: _layout}"></ng-container>
+      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: activePage$ | async}"></ng-container>
       <mat-action-row *ngIf="!_crudLoading; else loader">
         <button mat-button (click)="_revertData()">
           <mat-icon>settings_backup_restore</mat-icon>
           Cancel
         </button>
-        <button mat-button (click)="_editLayout(layout)">
+        <button mat-button (click)="_editPage(page)">
           <mat-icon>save</mat-icon>
           Save Changes
         </button>
-        <button mat-button (click)="_deleteLayout(layout)">
+        <button mat-button (click)="_deletePage(page)">
           <mat-icon>delete_forever</mat-icon>
           Delete
         </button>
@@ -41,11 +41,11 @@
     </mat-form-field>
 
     <button mat-button [matMenuTriggerFor]="tenantsMenu">
-      {{_selectedLayout?.tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
+      {{findLayout(activeTenant).tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
 
     <mat-menu #tenantsMenu="matMenu">
-      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="_selectedLayout = findLayout(page, tenant.name)">{{ tenant.name }}</button>
+      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="activeTenant = tenant.name">{{ tenant.name }}</button>
     </mat-menu>
   </div>
 

@@ -6,7 +6,7 @@ export class Page {
   portalName: string;
   level: number;
   layouts: Layout[] = [];
-  pages: Page[] = [];
+  children: Page[] = [];
 
   constructor() {
     this.name = '';

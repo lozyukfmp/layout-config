@@ -4,7 +4,7 @@ import {Page} from "../../models/Page";
 
 
 export class TodoItemFlatNode {
-  url: string;
+  name: string;
   level: number;
   expandable: boolean = true;
 }
@@ -41,13 +41,13 @@ export class PageTreeService {
     return Object.keys(obj).reduce<Page[]>((accumulator, key) => {
       const value = obj[key];
       const node = new Page();
-      node.url = key;
+      node.name = key;
 
       if (value != null) {
         if (typeof value === 'object') {
           node.children = this.buildFileTree(value, level + 1);
         } else {
-          node.url = value;
+          node.name = value;
         }
       }
       if (level === 0) {
@@ -73,15 +73,15 @@ export class PageTreeService {
     let currentData: Page[] = this.data;
     const parentNode: Page = this.getParentItemNode(itemNode, currentData);
     if (parentNode != null) {
-      parentNode.children = parentNode.children.filter(childNode => childNode.url !== itemNode.url);
+      parentNode.children = parentNode.children.filter(childNode => childNode.name !== itemNode.name);
     } else {
-      currentData = currentData.filter(node => node.url !== itemNode.url);
+      currentData = currentData.filter(node => node.name !== itemNode.name);
     }
     this.dataChange.next(currentData);
   }
 
   updateItem(node: Page, name: string, level: number) {
-    node.url = name;
+    node.name = name;
     node.level = level;
     this.dataChange.next(this.data);
   }
