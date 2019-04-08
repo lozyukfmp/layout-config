@@ -48,7 +48,7 @@ import {PageTreeComponent} from "./components/page-tree/page-tree.component";
     PreferencesComponent,
     PageTreeComponent,
 // pipes
-    ArrayFilterPipe,
+    ArrayFilterPipe
   ],
   imports: [
     BrowserModule,

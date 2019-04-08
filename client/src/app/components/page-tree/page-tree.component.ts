@@ -1,15 +1,17 @@
-import {ChangeDetectorRef, Component} from "@angular/core";
+import {Component, OnDestroy} from "@angular/core";
 import {PageTreeService, TodoItemFlatNode} from "../../services/page-tree/page-tree.service";
 import {FlatTreeControl} from "@angular/cdk/tree";
 import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
 import {Page} from "../../models/Page";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-page-tree',
   templateUrl: './page-tree.component.html',
   styleUrls: ['./page-tree.component.less']
 })
-export class PageTreeComponent {
+export class PageTreeComponent implements OnDestroy {
 
   flatNodeMap = new Map<TodoItemFlatNode, Page>();
 
@@ -21,16 +23,26 @@ export class PageTreeComponent {
 
   dataSource: MatTreeFlatDataSource<Page, TodoItemFlatNode>;
 
-  constructor(private pageTreeService: PageTreeService,
-              private cdr: ChangeDetectorRef) {
+  private activePage: Page;
+  private unsub$: Subject<void> = new Subject();
+
+  constructor(private pageTreeService: PageTreeService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    pageTreeService.dataChange.subscribe(data => {
-      this.dataSource.data = data;
-    });
+    pageTreeService.dataChange
+      .pipe(
+        takeUntil(this.unsub$)
+      )
+      .subscribe(data => this.dataSource.data = data);
+
+    this.pageTreeService.activePage
+      .pipe(
+        takeUntil(this.unsub$)
+      )
+      .subscribe(page => this.activePage = page);
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;
@@ -58,7 +70,7 @@ export class PageTreeComponent {
 
   addNewItem(node?: TodoItemFlatNode) {
     const parentNode: Page = this.flatNodeMap.get(node);
-    this.pageTreeService.insertItem(parentNode!, '', node ? node.level: 0);
+    this.pageTreeService.insertItem(parentNode!, '', node ? node.level : 0);
     this.toggle(node);
   }
 
@@ -86,5 +98,10 @@ export class PageTreeComponent {
       this.treeControl.toggle(parentItemFlatNode);
       this.treeControl.toggle(parentItemFlatNode);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsub$.next();
+    this.unsub$.complete();
   }
 }
