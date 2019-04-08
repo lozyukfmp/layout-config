@@ -14,7 +14,7 @@ router.get(fragmentApiUrl + ':fragmentId', passport.authenticate('jwt', {session
 router.post(fragmentApiUrl, passport.authenticate('jwt', {session: false}), fragmentController.add);
 router.patch(fragmentApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), fragmentController.update);
 router.delete(fragmentApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), fragmentController.remove);
-// pages
+// children
 const layoutApiUrl = '/page/';
 router.get(layoutApiUrl, passport.authenticate('jwt', {session: false}), pageController.getAll);
 router.get(layoutApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), pageController.get);
@@ -29,7 +29,7 @@ router.post(tenantApiUrl, passport.authenticate('jwt', {session: false}), tenant
 router.patch(tenantApiUrl + ':tenantId', passport.authenticate('jwt', {session: false}), tenantController.update);
 router.delete(tenantApiUrl + ':tenantId', passport.authenticate('jwt', {session: false}), tenantController.remove);
 
-// pages
+// children
 const preferencesApiUrl = '/preferences/';
 router.get(preferencesApiUrl, passport.authenticate('jwt', {session: false}), preferencesController.getAll);
 router.get(preferencesApiUrl + ':preferredId', passport.authenticate('jwt', {session: false}), preferencesController.get);

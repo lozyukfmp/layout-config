@@ -21,4 +21,4 @@ pageSchema.virtual('layouts', {
     justOne: false
 });
 
-module.exports = mongoose.model('pages', pageSchema);
+module.exports = mongoose.model('children', pageSchema);

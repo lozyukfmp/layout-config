@@ -15,17 +15,17 @@
   <app-page-tree></app-page-tree>
   <div class="layout-component-body">
     <mat-card>
-      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: _layout}"></ng-container>
+      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: activePage$ | async}"></ng-container>
       <mat-action-row *ngIf="!_crudLoading; else loader">
         <button mat-button (click)="_revertData()">
           <mat-icon>settings_backup_restore</mat-icon>
           Cancel
         </button>
-        <button mat-button (click)="_editLayout(layout)">
+        <button mat-button (click)="_editPage(page)">
           <mat-icon>save</mat-icon>
           Save Changes
         </button>
-        <button mat-button (click)="_deleteLayout(layout)">
+        <button mat-button (click)="_deletePage(page)">
           <mat-icon>delete_forever</mat-icon>
           Delete
         </button>
@@ -34,18 +34,23 @@
   </div>
 </div>
 
-<ng-template #layoutForm let-layout>
+<ng-template #layoutForm let-page>
   <div class="panel-form-body">
     <mat-form-field>
-      <input matInput placeholder="Name" [(ngModel)]="layout.name" required>
+      <input matInput placeholder="Name" [(ngModel)]="page.name" required>
     </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Tenant" [(ngModel)]="layout.tenant">
-    </mat-form-field>
+
+    <button mat-button [matMenuTriggerFor]="tenantsMenu">
+      {{findLayout(activeTenant).tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+
+    <mat-menu #tenantsMenu="matMenu">
+      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="activeTenant = tenant.name">{{ tenant.name }}</button>
+    </mat-menu>
   </div>
 
-  <div class="layout-configuration-map">
-    <div class="row" *ngFor="let row of layout.structure.rows">
+  <div class="layout-configuration-map" *ngIf="_selectedLayout">
+    <div class="row" *ngFor="let row of _selectedLayout.structure.rows">
       <ng-container *ngFor="let column of row.columns">
         <div class="{{column.cssClass}}">
           <div class="column-controls" *ngIf="_fragments.length > 0">
@@ -60,7 +65,7 @@
               *ngTemplateOutlet="fragmentTemplate; context: {
                 $implicit: fragment, fragments:
                 column.fragments, index: index,
-                tenant: layout.tenant
+                tenant: _selectedLayout.tenant
               }"
             ></ng-container>
           </ng-container>

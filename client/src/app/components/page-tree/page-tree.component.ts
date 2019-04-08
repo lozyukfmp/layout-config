@@ -54,14 +54,14 @@ export class PageTreeComponent implements OnDestroy {
 
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.url === '';
+  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.name === '';
 
   transformer = (node: Page, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.url === node.url
+    const flatNode = existingNode && existingNode.name === node.name
       ? existingNode
       : new TodoItemFlatNode();
-    flatNode.url = node.url;
+    flatNode.name = node.name;
     flatNode.level = level;
     flatNode.expandable = this.getChildren(node).length > 0;
     this.flatNodeMap.set(flatNode, node);
