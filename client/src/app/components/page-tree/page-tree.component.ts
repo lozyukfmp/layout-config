@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from "@angular/core";
+import {Component, OnDestroy, ViewEncapsulation} from "@angular/core";
 import {PageTreeService, TodoItemFlatNode} from "../../services/page-tree/page-tree.service";
 import {FlatTreeControl} from "@angular/cdk/tree";
 import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
@@ -9,7 +9,8 @@ import {takeUntil} from "rxjs/operators";
 @Component({
   selector: 'app-page-tree',
   templateUrl: './page-tree.component.html',
-  styleUrls: ['./page-tree.component.less']
+  styleUrls: ['./page-tree.component.less'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PageTreeComponent implements OnDestroy {
 
