@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Layout} from "../../models/Layout";
-import {Observable} from "rxjs/index";
 import {LayoutsService} from "../../services/layouts.service";
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {MatExpansionPanel} from '@angular/material/expansion';
@@ -14,6 +13,7 @@ import {PreferencesService} from "../../services/preferences.service";
 import {Preferences} from "../../models/Preferences";
 import {PortalService} from "../../services/portal.service";
 import {PageTreeService} from "../../services/page-tree/page-tree.service";
+import {PagesService} from "../../services/pages.service";
 
 @Component({
   selector: 'app-layouts',
@@ -32,7 +32,7 @@ export class LayoutsComponent implements OnInit {
 
   _filterValue: string;
 
-  constructor(private layoutsService: LayoutsService,
+  constructor(private layoutsService: PagesService,
               private fragmentsService: FragmentsService,
               private preferencesService: PreferencesService,
               public snackBar: MatSnackBar,
