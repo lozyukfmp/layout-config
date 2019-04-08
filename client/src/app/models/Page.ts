@@ -1,13 +1,16 @@
-import {Layout} from './Layout';
+import {Layout} from "./Layout";
 
 export class Page {
   _id?: string;
-  name: string;
-  portalName: string;
-  layouts: Layout[] = [];
-  pages: Page[];
+  url: string;
+  layout: Layout;
+  level: number;
+  children: Page[];
 
   constructor() {
-    this.layouts.push(new Layout());
+    this.url = '';
+    this.layout = new Layout();
+    this.children = [];
+    this.level = 0;
   }
 }

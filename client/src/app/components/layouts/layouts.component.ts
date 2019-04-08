@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Layout} from "../../models/Layout";
 import {Observable} from "rxjs/index";
-import {PagesService} from "../../services/pages.service";
+import {LayoutsService} from "../../services/layouts.service";
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {MatExpansionPanel} from '@angular/material/expansion';
 import {Fragment} from "../../models/Fragment";
@@ -13,9 +13,7 @@ import {FragmentInstance} from "../../models/FragmentInstance";
 import {PreferencesService} from "../../services/preferences.service";
 import {Preferences} from "../../models/Preferences";
 import {PortalService} from "../../services/portal.service";
-import {Page} from "../../models/Page";
-import {Tenant} from "../../models/Tenant";
-import {TenantService} from "../../services/tenants.service";
+import {PageTreeService} from "../../services/page-tree/page-tree.service";
 
 @Component({
   selector: 'app-layouts',
@@ -27,40 +25,33 @@ export class LayoutsComponent implements OnInit {
 
   public _expandedNewForm = false;
   public _crudLoading = false;
-  public _pages: Observable<Page[]>;
   public _fragments: Fragment[] = [];
-  public _tenants: Tenant[] = [];
-  public _newLayoutForm: Page = new Page();
+  public _newLayoutForm: Layout = new Layout();
   public _preferences: Preferences[];
-  public _selectedLayout: Layout = null;
+  public _layout: Layout;
 
   _filterValue: string;
 
-  constructor(private pagesService: PagesService,
+  constructor(private layoutsService: LayoutsService,
               private fragmentsService: FragmentsService,
               private preferencesService: PreferencesService,
-              private tenantService: TenantService,
               public snackBar: MatSnackBar,
               public dialog: MatDialog,
-              private portalService: PortalService) {
+              private portalService: PortalService,
+              private pageTreeService: PageTreeService) {
   }
 
   ngOnInit() {
     this.portalService.currentPortal.subscribe(_ => {
-      this.updateLayouts();
       this.fragmentsService.fetch().subscribe(res => {
         this._fragments = res;
       });
       this.updatePreferencesData();
     });
-
-    this.tenantService.fetch()
-      .subscribe(response => {
-        this._tenants = response;
-      });
+    this.pageTreeService.activePage.subscribe(page => this._layout = page.layout);
   }
 
-  updatePreferencesData() {
+  updatePreferencesData(){
     this.preferencesService.fetch().subscribe(res => {
       this._preferences = res;
     });
@@ -68,7 +59,6 @@ export class LayoutsComponent implements OnInit {
 
   updateLayouts() {
     this._expandedNewForm = false;
-    this._pages = this.pagesService.fetch();
     this._crudLoading = false;
   }
 
@@ -76,19 +66,19 @@ export class LayoutsComponent implements OnInit {
     this.updateLayouts();
   }
 
-  public _createPage() {
+  public _createLayout() {
     this._crudLoading = true;
-    this._newLayoutForm.layouts.forEach(layout => layout.innerHtml = htmlBuilder(layout));
-    this.pagesService.create(this._newLayoutForm).subscribe(_ => {
+    this._newLayoutForm.innerHtml = htmlBuilder(this._newLayoutForm);
+    this.layoutsService.create(this._newLayoutForm).subscribe(_ => {
       this.snackBar.open("Layout has been created", "", {duration: 2000, panelClass: "_success"});
       this._rollBackNewFrom();
       this.updateLayouts();
     })
   }
 
-  _deletePage(page: Page) {
+  _deleteLayout(layout: Layout) {
     this._crudLoading = true;
-    this.pagesService.delete(page._id).subscribe(_ => {
+    this.layoutsService.delete(layout._id).subscribe(_ => {
       // todo delete preferences for fragment instances
       this.snackBar.open("Layout has been deleted", "", {duration: 2000, panelClass: "_success"});
       this._rollBackNewFrom();
@@ -96,10 +86,10 @@ export class LayoutsComponent implements OnInit {
     })
   }
 
-  _editPage(page: Page) {
+  _editLayout(layout: Layout) {
     this._crudLoading = true;
-    page.layouts.forEach(layout => layout.innerHtml = htmlBuilder(layout));
-    this.pagesService.update(page).subscribe(_ => {
+    layout.innerHtml = htmlBuilder(layout);
+    this.layoutsService.update(layout).subscribe(_ => {
       this.snackBar.open("Fragment has been updated", "", {duration: 2000, panelClass: "_success"});
       this._rollBackNewFrom();
       this.updateLayouts();
@@ -107,7 +97,7 @@ export class LayoutsComponent implements OnInit {
   }
 
   public _rollBackNewFrom() {
-    this._newLayoutForm = new Page();
+    this._newLayoutForm = new Layout();
   }
 
   _deleteFragment(fragments, index){
@@ -162,24 +152,11 @@ export class LayoutsComponent implements OnInit {
           this.preferencesService.create(preferences).subscribe(_ => {
             this.snackBar.open("Preferences has been created", "", {duration: 2000, panelClass: "_success"});
             this.updatePreferencesData();
-          });
+          });;
           console.log('save new pref ', preferences)
         }
         //todo  save newPreferences
       }
     })
-  }
-
-  findLayout(page: Page, name: string = 'DEFAULT') {
-    let layout = page.layouts.find(value => value.tenant === name);
-    if (!layout) {
-      layout = new Layout(name);
-      page.layouts.push(layout);
-    }
-    return layout;
-  }
-
-  onPanelExpand(page: Page) {
-    this._selectedLayout = page.layouts.find(layout => layout.tenant === 'DEFAULT');
   }
 }
