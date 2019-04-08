@@ -34,18 +34,23 @@
   </div>
 </div>
 
-<ng-template #layoutForm let-layout>
+<ng-template #layoutForm let-page>
   <div class="panel-form-body">
     <mat-form-field>
-      <input matInput placeholder="Name" [(ngModel)]="layout.name" required>
+      <input matInput placeholder="Name" [(ngModel)]="page.name" required>
     </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Tenant" [(ngModel)]="layout.tenant">
-    </mat-form-field>
+
+    <button mat-button [matMenuTriggerFor]="tenantsMenu">
+      {{_selectedLayout?.tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+
+    <mat-menu #tenantsMenu="matMenu">
+      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="_selectedLayout = findLayout(page, tenant.name)">{{ tenant.name }}</button>
+    </mat-menu>
   </div>
 
-  <div class="layout-configuration-map">
-    <div class="row" *ngFor="let row of layout.structure.rows">
+  <div class="layout-configuration-map" *ngIf="_selectedLayout">
+    <div class="row" *ngFor="let row of _selectedLayout.structure.rows">
       <ng-container *ngFor="let column of row.columns">
         <div class="{{column.cssClass}}">
           <div class="column-controls" *ngIf="_fragments.length > 0">
@@ -60,7 +65,7 @@
               *ngTemplateOutlet="fragmentTemplate; context: {
                 $implicit: fragment, fragments:
                 column.fragments, index: index,
-                tenant: layout.tenant
+                tenant: _selectedLayout.tenant
               }"
             ></ng-container>
           </ng-container>

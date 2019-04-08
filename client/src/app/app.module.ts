@@ -32,6 +32,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {PreferencesComponent} from "./components/fragments/preferences/preferences.component";
 import {PreferencesDialogComponent} from "./components/layouts/preferences-dialog/preferences-dialog.component";
 import {MatMenuModule} from '@angular/material/menu';
+import {TenantsComponent} from "./components/tenants/tenants.component";
 import {MatTreeModule} from '@angular/material/tree';
 import {PageTreeComponent} from "./components/page-tree/page-tree.component";
 
@@ -46,6 +47,7 @@ import {PageTreeComponent} from "./components/page-tree/page-tree.component";
     FragmentsDialogComponent,
     PreferencesDialogComponent,
     PreferencesComponent,
+    TenantsComponent,
     PageTreeComponent,
 // pipes
     ArrayFilterPipe

@@ -1,6 +1,7 @@
 const express = require('express');
 const fragmentController = require('../controllers/fragmentController');
-const layoutController = require('../controllers/layoutController');
+const pageController = require('../controllers/pageController');
+const tenantController = require('../controllers/tenantController');
 const preferencesController = require('../controllers/preferencesController');
 const publicApiController = require('../controllers/publicApiController');
 const router = express.Router();
@@ -13,13 +14,20 @@ router.get(fragmentApiUrl + ':fragmentId', passport.authenticate('jwt', {session
 router.post(fragmentApiUrl, passport.authenticate('jwt', {session: false}), fragmentController.add);
 router.patch(fragmentApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), fragmentController.update);
 router.delete(fragmentApiUrl + ':fragmentId', passport.authenticate('jwt', {session: false}), fragmentController.remove);
-// layouts
-const layoutApiUrl = '/layout/';
-router.get(layoutApiUrl, passport.authenticate('jwt', {session: false}), layoutController.getAll);
-router.get(layoutApiUrl + ':layoutId', passport.authenticate('jwt', {session: false}), layoutController.get);
-router.post(layoutApiUrl, passport.authenticate('jwt', {session: false}), layoutController.add);
-router.patch(layoutApiUrl + ':layoutId', passport.authenticate('jwt', {session: false}), layoutController.update);
-router.delete(layoutApiUrl + ':layoutId', passport.authenticate('jwt', {session: false}), layoutController.remove);
+// pages
+const layoutApiUrl = '/page/';
+router.get(layoutApiUrl, passport.authenticate('jwt', {session: false}), pageController.getAll);
+router.get(layoutApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), pageController.get);
+router.post(layoutApiUrl, passport.authenticate('jwt', {session: false}), pageController.add);
+router.patch(layoutApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), pageController.update);
+router.delete(layoutApiUrl + ':pageId', passport.authenticate('jwt', {session: false}), pageController.remove);
+// tenants
+const tenantApiUrl = '/tenant/';
+router.get(tenantApiUrl, passport.authenticate('jwt', {session: false}), tenantController.getAll);
+router.get(tenantApiUrl + ':tenantId', passport.authenticate('jwt', {session: false}), tenantController.get);
+router.post(tenantApiUrl, passport.authenticate('jwt', {session: false}), tenantController.add);
+router.patch(tenantApiUrl + ':tenantId', passport.authenticate('jwt', {session: false}), tenantController.update);
+router.delete(tenantApiUrl + ':tenantId', passport.authenticate('jwt', {session: false}), tenantController.remove);
 
 // pages
 const preferencesApiUrl = '/preferences/';

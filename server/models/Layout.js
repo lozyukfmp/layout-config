@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const layoutSchema = new Schema({
-    name: {
+    page: {
         type: String,
         required: true
     },
@@ -23,7 +23,7 @@ const layoutSchema = new Schema({
                     fragments: [
                         {
                             instanceId: String,
-                            fragmentType:{
+                            fragmentType: {
                                 ref: 'fragments',
                                 type: Schema.Types.ObjectId
                             }
@@ -33,11 +33,6 @@ const layoutSchema = new Schema({
                 }]
             }
         ]
-    },
-    portalName: {
-        type: String,
-        required: true,
-        default: ''
     }
 });
 
