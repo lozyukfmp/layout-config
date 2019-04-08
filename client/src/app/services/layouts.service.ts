@@ -33,6 +33,11 @@ export class LayoutsService extends DataBaseService<Layout> {
         })),
         tap(data => {
           this.layouts.next(data);
+          if(data && data.length > 0) {
+            this.activeLayout.next(data[0]);
+          } else {
+            this.setActiveLayout();
+          }
         })
       );
   }
@@ -55,7 +60,7 @@ export class LayoutsService extends DataBaseService<Layout> {
     }
   }
 
-  setActiveLayout(tenant: string): void {
+  setActiveLayout(tenant?: string): void {
     let layout = this.layouts.getValue().find(value => value.tenant === tenant);
     if (!layout) {
       layout = new Layout(tenant);

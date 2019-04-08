@@ -17,7 +17,7 @@
   <div class="layout-container">
     <mat-form-field>
       <mat-label>Tenant</mat-label>
-      <mat-select (selectionChange)="setActiveLayout($event.value)">
+      <mat-select [value]="(activeLayout$ | async).tenant" (selectionChange)="setActiveLayout($event.value)">
         <mat-option *ngFor="let tenant of _tenants" [value]="tenant.name">
           {{tenant.name}}
         </mat-option>
