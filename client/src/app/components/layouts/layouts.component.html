@@ -13,9 +13,9 @@
 <div class="page-content _page-limiter">
 
   <app-page-tree></app-page-tree>
-  <div class="layout-component-body">
+  <div class="layout-component-body" *ngIf="activePage$ | async as page">
     <mat-card>
-      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: activePage$ | async}"></ng-container>
+      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: page}"></ng-container>
       <mat-action-row *ngIf="!_crudLoading; else loader">
         <button mat-button (click)="_revertData()">
           <mat-icon>settings_backup_restore</mat-icon>
@@ -41,16 +41,16 @@
     </mat-form-field>
 
     <button mat-button [matMenuTriggerFor]="tenantsMenu">
-      {{findLayout(activeTenant).tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
+      {{(activeLayout$ | async)?.tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
 
     <mat-menu #tenantsMenu="matMenu">
-      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="activeTenant = tenant.name">{{ tenant.name }}</button>
+      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="setActiveLayout(tenant.name)">{{ tenant.name }}</button>
     </mat-menu>
   </div>
 
-  <div class="layout-configuration-map" *ngIf="_selectedLayout">
-    <div class="row" *ngFor="let row of _selectedLayout.structure.rows">
+  <div class="layout-configuration-map" *ngIf="(activeLayout$ | async)">
+    <div class="row" *ngFor="let row of (activeLayout$ | async).structure.rows">
       <ng-container *ngFor="let column of row.columns">
         <div class="{{column.cssClass}}">
           <div class="column-controls" *ngIf="_fragments.length > 0">
@@ -65,7 +65,7 @@
               *ngTemplateOutlet="fragmentTemplate; context: {
                 $implicit: fragment, fragments:
                 column.fragments, index: index,
-                tenant: _selectedLayout.tenant
+                tenant: (activeLayout$ | async).tenant
               }"
             ></ng-container>
           </ng-container>

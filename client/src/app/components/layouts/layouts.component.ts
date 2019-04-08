@@ -1,22 +1,22 @@
 import {Component, OnInit} from '@angular/core';
-import {Layout} from "../../models/Layout";
-import {BehaviorSubject, Observable, Subject} from "rxjs/index";
-import {PagesService} from "../../services/pages.service";
+import {Layout} from '../../models/Layout';
+import {BehaviorSubject, Observable} from 'rxjs/index';
+import {PagesService} from '../../services/pages.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {MatExpansionPanel} from '@angular/material/expansion';
-import {Fragment} from "../../models/Fragment";
-import {FragmentsService} from "../../services/fragments.service";
-import {FragmentsDialogComponent} from "./fragments-dialog/fragments-dialog.component";
-import {PreferencesDialogComponent} from "./preferences-dialog/preferences-dialog.component";
-import htmlBuilder from "./html-builder";
-import {FragmentInstance} from "../../models/FragmentInstance";
-import {PreferencesService} from "../../services/preferences.service";
-import {Preferences} from "../../models/Preferences";
-import {PortalService} from "../../services/portal.service";
-import {Page} from "../../models/Page";
-import {Tenant} from "../../models/Tenant";
-import {TenantService} from "../../services/tenants.service";
-import {PageTreeService} from "../../services/page-tree/page-tree.service";
+import {Fragment} from '../../models/Fragment';
+import {FragmentsService} from '../../services/fragments.service';
+import {FragmentsDialogComponent} from './fragments-dialog/fragments-dialog.component';
+import {PreferencesDialogComponent} from './preferences-dialog/preferences-dialog.component';
+import htmlBuilder from './html-builder';
+import {FragmentInstance} from '../../models/FragmentInstance';
+import {PreferencesService} from '../../services/preferences.service';
+import {Preferences} from '../../models/Preferences';
+import {PortalService} from '../../services/portal.service';
+import {Page} from '../../models/Page';
+import {Tenant} from '../../models/Tenant';
+import {TenantService} from '../../services/tenants.service';
+import {PageTreeService} from '../../services/page-tree/page-tree.service';
 
 @Component({
   selector: 'app-layouts',
@@ -35,7 +35,7 @@ export class LayoutsComponent implements OnInit {
   public _preferences: Preferences[];
   public _selectedLayout: Layout = null;
   public activePage$: BehaviorSubject<Page>;
-  public activeTenant: string;
+  public activeLayout$: BehaviorSubject<Layout> = new BehaviorSubject(null);
 
   _filterValue: string;
 
@@ -62,7 +62,10 @@ export class LayoutsComponent implements OnInit {
       .subscribe(response => {
         this._tenants = response;
       });
+
     this.activePage$ = this.pageTreeService.activePage;
+
+    this.activePage$.subscribe(value => this.setActiveLayout());
   }
 
   updatePreferencesData() {
@@ -85,39 +88,39 @@ export class LayoutsComponent implements OnInit {
     this._crudLoading = true;
     this._newLayoutForm.layouts.forEach(layout => layout.innerHtml = htmlBuilder(layout));
     this.pagesService.create(this._newLayoutForm).subscribe(_ => {
-      this.snackBar.open("Layout has been created", "", {duration: 2000, panelClass: "_success"});
+      this.snackBar.open('Layout has been created', '', {duration: 2000, panelClass: '_success'});
       this._rollBackNewFrom();
       this.updateLayouts();
-    })
+    });
   }
 
   _deletePage(page: Page) {
     this._crudLoading = true;
     this.pagesService.delete(page._id).subscribe(_ => {
       // todo delete preferences for fragment instances
-      this.snackBar.open("Layout has been deleted", "", {duration: 2000, panelClass: "_success"});
+      this.snackBar.open('Layout has been deleted', '', {duration: 2000, panelClass: '_success'});
       this._rollBackNewFrom();
       this.updateLayouts();
-    })
+    });
   }
 
   _editPage(page: Page) {
     this._crudLoading = true;
     page.layouts.forEach(layout => layout.innerHtml = htmlBuilder(layout));
     this.pagesService.update(page).subscribe(_ => {
-      this.snackBar.open("Fragment has been updated", "", {duration: 2000, panelClass: "_success"});
+      this.snackBar.open('Fragment has been updated', '', {duration: 2000, panelClass: '_success'});
       this._rollBackNewFrom();
       this.updateLayouts();
-    })
+    });
   }
 
   public _rollBackNewFrom() {
     this._newLayoutForm = new Page();
   }
 
-  _deleteFragment(fragments, index){
+  _deleteFragment(fragments, index) {
     // todo delete preferences for fragment instance
-    fragments.splice(index, 1)
+    fragments.splice(index, 1);
   }
 
   _moveDownFragment(fragments: Fragment[], index: number) {
@@ -145,40 +148,40 @@ export class LayoutsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(selectedFragment => {
       if (selectedFragment != undefined) {
-        fragments.push(new FragmentInstance(selectedFragment))
+        fragments.push(new FragmentInstance(selectedFragment));
       }
-    })
+    });
   }
 
-  _openSetPreferencesDialog(fragment: FragmentInstance, tenant:string ){
+  _openSetPreferencesDialog(fragment: FragmentInstance, tenant: string ) {
     const dialogRef = this.dialog.open(PreferencesDialogComponent, {
       width: 'auto',
       data: {fragment: fragment, preferences: this._preferences, tenant: tenant}
     });
     dialogRef.afterClosed().subscribe(preferences => {
       if (preferences != undefined) {
-        if( preferences._id != null){
-         console.log('update pref ', preferences)
+        if ( preferences._id != null) {
+         console.log('update pref ', preferences);
           this.preferencesService.update(preferences).subscribe(_ => {
-            this.snackBar.open("Preferences has been updated", "", {duration: 2000, panelClass: "_success"});
+            this.snackBar.open('Preferences has been updated', '', {duration: 2000, panelClass: '_success'});
             this.updatePreferencesData();
           });
         } else {
           this.preferencesService.create(preferences).subscribe(_ => {
-            this.snackBar.open("Preferences has been created", "", {duration: 2000, panelClass: "_success"});
+            this.snackBar.open('Preferences has been created', '', {duration: 2000, panelClass: '_success'});
             this.updatePreferencesData();
           });
-          console.log('save new pref ', preferences)
+          console.log('save new pref ', preferences);
         }
-        //todo  save newPreferences
+        // todo  save newPreferences
       }
-    })
+    });
   }
 
-  findLayout(tenant: string = 'DEFAULT') {
+  setActiveLayout(tenant: string = 'DEFAULT') {
     let activePage = this.activePage$.getValue(),
       layouts = activePage.layouts,
-      layout = layouts.find(layout => layout.tenant === tenant);
+      layout = layouts.find(value => value.tenant === tenant);
 
     if (!layout) {
       layout = new Layout(tenant);
@@ -186,6 +189,6 @@ export class LayoutsComponent implements OnInit {
       this.activePage$.next(activePage);
     }
 
-    return layout;
+    this.activeLayout$.next(layout);
   }
 }
