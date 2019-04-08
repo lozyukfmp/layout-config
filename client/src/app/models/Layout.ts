@@ -2,18 +2,14 @@ import {FragmentInstance} from "./FragmentInstance";
 
 export class Layout {
   _id?: string;
-  name: string;
   tenant: string;
   structure: LayoutStructure;
   innerHtml: string;
-  portalName: string;
 
-  constructor() {
-    this.name = "";
-    this.tenant = "DEFAULT";
+  constructor(tenant: string = 'DEFAULT') {
+    this.tenant = tenant;
     this.structure = new LayoutStructure();
     this.innerHtml = "";
-    this.portalName = "";
   }
 }
 

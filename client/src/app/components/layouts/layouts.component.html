@@ -23,7 +23,7 @@
         <button mat-button (click)="_rollBackNewFrom()">
           <mat-icon>settings_backup_restore</mat-icon> Clear
         </button>
-        <button mat-button (click)="_createLayout()">
+        <button mat-button (click)="_createPage()">
           <mat-icon>save</mat-icon> Create
         </button>
       </mat-action-row>
@@ -31,24 +31,24 @@
 
     <hr>
     <!--created Layouts-->
-    <ng-container *ngIf="_layouts | async as layouts; else loader">
-      <ng-container *ngFor="let layout of layouts | filterArray: {name: _filterValue}">
-        <mat-expansion-panel hideToggle>
+    <ng-container *ngIf="_pages | async as pages; else loader">
+      <ng-container *ngFor="let page of pages | filterArray: {name: _filterValue}">
+        <mat-expansion-panel hideToggle (afterExpand)="onPanelExpand(page)">
           <mat-expansion-panel-header>
-            <mat-panel-title> {{layout.name}} </mat-panel-title>
-            <mat-panel-description> {{layout.tenant || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>
+            <mat-panel-title> {{page.name}} </mat-panel-title>
+            <!--<mat-panel-description> {{layout.tenant || "-"}} <mat-icon>table_chart</mat-icon> </mat-panel-description>-->
           </mat-expansion-panel-header>
 
-          <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: layout}"></ng-container>
+          <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: page}"></ng-container>
 
           <mat-action-row *ngIf="!_crudLoading; else loader">
             <button mat-button (click)="_revertData()">
               <mat-icon>settings_backup_restore</mat-icon> Cancel
             </button>
-            <button mat-button (click)="_editLayout(layout)">
+            <button mat-button (click)="_editPage(page)">
               <mat-icon>save</mat-icon> Save Changes
             </button>
-            <button mat-button (click)="_deleteLayout(layout)">
+            <button mat-button (click)="_deletePage(page)">
               <mat-icon>delete_forever</mat-icon> Delete
             </button>
           </mat-action-row>
@@ -58,18 +58,23 @@
   </mat-accordion>
 </div>
 
-<ng-template #layoutForm let-layout>
+<ng-template #layoutForm let-page>
   <div class="panel-form-body">
     <mat-form-field>
-      <input matInput placeholder="Name" [(ngModel)]="layout.name" required>
+      <input matInput placeholder="Name" [(ngModel)]="page.name" required>
     </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Tenant" [(ngModel)]="layout.tenant">
-    </mat-form-field>
+
+    <button mat-button [matMenuTriggerFor]="tenantsMenu">
+      {{_selectedLayout?.tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+
+    <mat-menu #tenantsMenu="matMenu">
+      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="_selectedLayout = findLayout(page, tenant.name)">{{ tenant.name }}</button>
+    </mat-menu>
   </div>
 
-  <div class="layout-configuration-map">
-    <div class="row" *ngFor="let row of layout.structure.rows">
+  <div class="layout-configuration-map" *ngIf="_selectedLayout">
+    <div class="row" *ngFor="let row of _selectedLayout.structure.rows">
       <ng-container *ngFor="let column of row.columns">
         <div class="{{column.cssClass}}">
           <div class="column-controls" *ngIf="_fragments.length > 0">
@@ -84,7 +89,7 @@
               *ngTemplateOutlet="fragmentTemplate; context: {
                 $implicit: fragment, fragments:
                 column.fragments, index: index,
-                tenant: layout.tenant
+                tenant: _selectedLayout.tenant
               }"
             ></ng-container>
           </ng-container>
