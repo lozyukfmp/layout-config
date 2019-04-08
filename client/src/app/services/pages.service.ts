@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 import {MatSnackBar} from '@angular/material';
-import {DataBaseService} from "./dataBase.service";
-import {PortalService} from "./portal.service";
-import {Observable} from "rxjs";
-import {Page} from "../models/Page";
+import {DataBaseService} from './dataBase.service';
+import {PortalService} from './portal.service';
+import {Observable} from 'rxjs';
+import {Page} from '../models/Page';
 
 
 @Injectable({

@@ -17,6 +17,7 @@ import {Page} from '../../models/Page';
 import {Tenant} from '../../models/Tenant';
 import {TenantService} from '../../services/tenants.service';
 import {PageTreeService} from '../../services/page-tree/page-tree.service';
+import {LayoutsService} from '../../services/layouts.service';
 
 @Component({
   selector: 'app-layouts',
@@ -31,15 +32,17 @@ export class LayoutsComponent implements OnInit {
   public _pages: Observable<Page[]>;
   public _fragments: Fragment[] = [];
   public _tenants: Tenant[] = [];
-  public _newLayoutForm: Page = new Page();
+  public _newLayoutForm: Layout = new Layout();
   public _preferences: Preferences[];
-  public _selectedLayout: Layout = null;
   public activePage$: BehaviorSubject<Page>;
-  public activeLayout$: BehaviorSubject<Layout> = new BehaviorSubject(null);
+
+  public activeLayout$: Observable<Layout>;
+  public layouts$: Observable<Layout[]>;
 
   _filterValue: string;
 
   constructor(private pagesService: PagesService,
+              private layoutsService: LayoutsService,
               private fragmentsService: FragmentsService,
               private preferencesService: PreferencesService,
               private tenantService: TenantService,
@@ -63,9 +66,7 @@ export class LayoutsComponent implements OnInit {
         this._tenants = response;
       });
 
-    this.activePage$ = this.pageTreeService.activePage;
-
-    this.activePage$.subscribe(value => this.setActiveLayout());
+    this.activeLayout$ = this.layoutsService.activeLayout$;
   }
 
   updatePreferencesData() {
@@ -76,7 +77,7 @@ export class LayoutsComponent implements OnInit {
 
   updateLayouts() {
     this._expandedNewForm = false;
-    this._pages = this.pagesService.fetch();
+    this.layoutsService.fetch().subscribe();
     this._crudLoading = false;
   }
 
@@ -84,19 +85,19 @@ export class LayoutsComponent implements OnInit {
     this.updateLayouts();
   }
 
-  public _createPage() {
+  public _createLayout() {
     this._crudLoading = true;
-    this._newLayoutForm.layouts.forEach(layout => layout.innerHtml = htmlBuilder(layout));
-    this.pagesService.create(this._newLayoutForm).subscribe(_ => {
+    this._newLayoutForm.innerHtml = htmlBuilder(this._newLayoutForm);
+    this.layoutsService.create(this._newLayoutForm).subscribe(_ => {
       this.snackBar.open('Layout has been created', '', {duration: 2000, panelClass: '_success'});
       this._rollBackNewFrom();
       this.updateLayouts();
     });
   }
 
-  _deletePage(page: Page) {
+  _deleteLayout(layout: Layout) {
     this._crudLoading = true;
-    this.pagesService.delete(page._id).subscribe(_ => {
+    this.layoutsService.delete(layout._id).subscribe(_ => {
       // todo delete preferences for fragment instances
       this.snackBar.open('Layout has been deleted', '', {duration: 2000, panelClass: '_success'});
       this._rollBackNewFrom();
@@ -104,10 +105,10 @@ export class LayoutsComponent implements OnInit {
     });
   }
 
-  _editPage(page: Page) {
+  _editLayout(layout: Layout) {
     this._crudLoading = true;
-    page.layouts.forEach(layout => layout.innerHtml = htmlBuilder(layout));
-    this.pagesService.update(page).subscribe(_ => {
+    layout.innerHtml = htmlBuilder(layout);
+    this.layoutsService.update(layout).subscribe(_ => {
       this.snackBar.open('Fragment has been updated', '', {duration: 2000, panelClass: '_success'});
       this._rollBackNewFrom();
       this.updateLayouts();
@@ -115,7 +116,7 @@ export class LayoutsComponent implements OnInit {
   }
 
   public _rollBackNewFrom() {
-    this._newLayoutForm = new Page();
+    this._newLayoutForm = new Layout();
   }
 
   _deleteFragment(fragments, index) {
@@ -178,17 +179,7 @@ export class LayoutsComponent implements OnInit {
     });
   }
 
-  setActiveLayout(tenant: string = 'DEFAULT') {
-    let activePage = this.activePage$.getValue(),
-      layouts = activePage.layouts,
-      layout = layouts.find(value => value.tenant === tenant);
-
-    if (!layout) {
-      layout = new Layout(tenant);
-      layouts.push(layout);
-      this.activePage$.next(activePage);
-    }
-
-    this.activeLayout$.next(layout);
+  setActiveLayout(tenant: string): void {
+    this.layoutsService.setActiveLayout(tenant);
   }
 }

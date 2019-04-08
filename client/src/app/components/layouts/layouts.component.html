@@ -13,44 +13,43 @@
 <div class="page-content _page-limiter">
 
   <app-page-tree></app-page-tree>
-  <div class="layout-component-body" *ngIf="activePage$ | async as page">
-    <mat-card>
-      <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: page}"></ng-container>
-      <mat-action-row *ngIf="!_crudLoading; else loader">
-        <button mat-button (click)="_revertData()">
-          <mat-icon>settings_backup_restore</mat-icon>
-          Cancel
-        </button>
-        <button mat-button (click)="_editPage(page)">
-          <mat-icon>save</mat-icon>
-          Save Changes
-        </button>
-        <button mat-button (click)="_deletePage(page)">
-          <mat-icon>delete_forever</mat-icon>
-          Delete
-        </button>
-      </mat-action-row>
-    </mat-card>
-  </div>
-</div>
 
-<ng-template #layoutForm let-page>
-  <div class="panel-form-body">
+  <div class="layout-container">
     <mat-form-field>
-      <input matInput placeholder="Name" [(ngModel)]="page.name" required>
+      <mat-label>Tenant</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let tenant of _tenants" [value]="tenant.name" (onSelectionChange)="setActiveLayout($event)">
+          {{tenant.name}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
-    <button mat-button [matMenuTriggerFor]="tenantsMenu">
-      {{(activeLayout$ | async)?.tenant}} <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
-
-    <mat-menu #tenantsMenu="matMenu">
-      <button mat-menu-item *ngFor="let tenant of _tenants" (click)="setActiveLayout(tenant.name)">{{ tenant.name }}</button>
-    </mat-menu>
+    <div class="layout-component-body" *ngIf="activeLayout$ | async as layout; else newLayout">
+      <mat-card>
+        <ng-container *ngTemplateOutlet="layoutForm; context: {$implicit: layout}"></ng-container>
+        <mat-action-row *ngIf="!_crudLoading; else loader">
+          <button mat-button (click)="_revertData()">
+            <mat-icon>settings_backup_restore</mat-icon>
+            Cancel
+          </button>
+          <button mat-button (click)="_editLayout(layout)">
+            <mat-icon>save</mat-icon>
+            Save Changes
+          </button>
+          <button mat-button (click)="_deleteLayout(layout)">
+            <mat-icon>delete_forever</mat-icon>
+            Delete
+          </button>
+        </mat-action-row>
+      </mat-card>
+    </div>
   </div>
 
-  <div class="layout-configuration-map" *ngIf="(activeLayout$ | async)">
-    <div class="row" *ngFor="let row of (activeLayout$ | async).structure.rows">
+</div>
+
+<ng-template #layoutForm let-layout>
+  <div class="layout-configuration-map">
+    <div class="row" *ngFor="let row of layout.structure.rows">
       <ng-container *ngFor="let column of row.columns">
         <div class="{{column.cssClass}}">
           <div class="column-controls" *ngIf="_fragments.length > 0">
@@ -65,7 +64,7 @@
               *ngTemplateOutlet="fragmentTemplate; context: {
                 $implicit: fragment, fragments:
                 column.fragments, index: index,
-                tenant: (activeLayout$ | async).tenant
+                tenant: layout.tenant
               }"
             ></ng-container>
           </ng-container>
@@ -80,6 +79,14 @@
         </div>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #newLayout >
+  <div class="new-layout-container">
+    <mat-card>
+      <button mat-icon-button><mat-icon>add_circle</mat-icon></button>
+    </mat-card>
   </div>
 </ng-template>
 
